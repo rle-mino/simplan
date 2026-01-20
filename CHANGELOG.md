@@ -1,0 +1,32 @@
+# Changelog
+
+All notable changes to Simplan will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.0] - 2025-01-20
+
+### Added
+
+- `/item:add` - Add new items to the backlog
+- `/item:plan` - Interactive planning with 1-12 questions
+- `/item:brainstorm` - Extensive brainstorming with 10-40 questions
+- `/item:exec` - Phase-by-phase execution with review
+- `/item:validate` - Complete and validate items
+- `/item:progress` - View backlog status
+- `/item:delete` - Remove items from backlog
+- `/item:help` - Workflow documentation
+- `/item:updatesimplan` - Update framework and initialize .simplan/
+- `simplan:exec` agent - Implements code changes following the plan
+- `simplan:review` agent - Reviews changes with fresh eyes
+- Auto-cleanup of deprecated simplan files on update
+- XDG Base Directory spec compliance for global installs
+
+### Installation
+
+Global installs now use XDG-compliant paths:
+- Source files: `${XDG_CONFIG_HOME:-$HOME/.config}/simplan-source/`
+- Symlinks: `~/.claude/commands/` and `~/.claude/agents/`
+
+The installer automatically removes deprecated simplan files (matching `item:*.md` for commands and `simplan:*.md` for agents) that no longer exist in the new version.

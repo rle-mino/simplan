@@ -1,0 +1,214 @@
+---
+description: Plan an item with phases before coding
+argument-hint: [item-number]
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+  - Glob
+  - Grep
+  - Task
+  - AskUserQuestion
+  - WebFetch
+  - WebSearch
+  - mcp__context7__resolve-library-id
+  - mcp__context7__query-docs
+---
+
+## Context
+
+Current backlog:
+@.simplan/ITEMS.md
+
+## Status Emojis
+
+When displaying or updating item statuses, use these emojis:
+- 📋 `BACKLOG` - Not yet planned
+- 📝 `PLANNED` - Has a plan, ready to execute
+- ⏸️ `IDLE` - Started but paused
+- 🔄 `IN_PROGRESS` - Currently being worked on
+- ✅ `DONE` - Completed
+
+## Task
+
+Plan item #$ARGUMENTS through an interactive explore-question loop.
+
+## Process
+
+### Step 1: Parse & Validate
+
+1. Get item number from `$ARGUMENTS`
+2. If no item number provided:
+   - Read the backlog and list items with status `BACKLOG`
+   - Use **AskUserQuestion** to ask which one to plan
+3. Extract item details: number, slug, title, description
+
+### Step 2: Explore-Question Loop (max 3 iterations)
+
+Repeat the following loop until you have enough context to create a solid plan (max 3 iterations):
+
+#### 2a. Explore the Codebase
+
+Use Glob, Grep, and Read to understand:
+- Directory structure and organization
+- Key files related to the item
+- Existing patterns and conventions
+- Code that might be affected by the change
+
+Use WebFetch/WebSearch/Context7 if you need external documentation (libraries, APIs, etc.).
+
+**After exploring, summarize what you learned** in a brief internal note (don't write to file yet).
+
+#### 2b. Ask Clarifying Questions
+
+**Use AskUserQuestion** to ask 1-4 questions based on what you discovered. Focus on:
+
+- **Gray areas**: Things that could go multiple ways
+- **Preferences**: How the user wants it done
+- **Constraints**: Limitations or requirements
+- **Scope**: What's in/out of this item
+
+Adapt questions based on previous answers. Don't re-ask what's already clear.
+
+#### 2c. Decide: Loop or Proceed?
+
+After each Q&A round, evaluate:
+- Do I understand the requirements well enough?
+- Are there still ambiguities that need exploration?
+- Have I reached the max iterations (3)?
+
+If confident OR max iterations reached → proceed to Step 3.
+Otherwise → loop back to 2a with focused exploration based on answers.
+
+### Step 3: Create the Plan
+
+Break the item into **phases**. Each phase should be:
+- **Atomic**: Can be completed independently
+- **Commitable**: Results in a working state
+- **Small**: Ideally 1-3 files changed
+- **Ordered**: Dependencies come first
+- **Bisect-compliant**: Must pass all precommit hooks (tests, linting, type checks)
+
+**Bisect compliance is critical.** Every phase commit must leave the codebase in a valid state:
+- If adding a new function, don't call it until a later phase unless both are in the same commit
+- If changing an interface, update all callers in the same phase
+- If adding tests, ensure the implementation exists first (or include both together)
+- Never leave dead code, broken imports, or type errors between phases
+
+**Group phases into steps for parallel execution:**
+- Phases in the same step have NO dependencies on each other
+- Phases in step N+1 may depend on phases in step N (or earlier)
+- A step can have 1-4 phases
+- When in doubt, put phases in separate steps (safer)
+
+**Criteria for same-step grouping:**
+- Different files with no shared imports
+- Independent features that don't interact
+- Tests for different components
+
+**Criteria for separate steps:**
+- One phase creates something another uses
+- Shared file modifications
+- Interface changes that affect other phases
+
+For each phase, specify:
+- Clear tasks (as a checklist)
+- Files that will be modified/created
+- A suggested commit message
+- Any bisect considerations (e.g., "must include X to avoid broken imports")
+- **Step number** for parallel execution grouping
+
+### Step 4: Write the Plan File
+
+Write the plan to `.simplan/plans/<number>-<slug>.md` using this format:
+
+```markdown
+# Plan: Item #<number> - <title>
+
+## Context
+<What you learned about the codebase relevant to this item>
+
+## Clarifications
+<Questions you asked and answers received>
+
+## Execution Steps
+
+| Step | Phases | Description |
+|------|--------|-------------|
+| 1    | 1, 2   | <why these are independent> |
+| 2    | 3      | <why this depends on step 1> |
+
+> **Parallelism**: Phases within the same step can run in parallel (max 4).
+
+## Phases
+
+### Phase 1: <title>
+- **Step**: 1
+- [ ] <task>
+- [ ] <task>
+- **Files**: <list of files>
+- **Commit message**: `<message>`
+- **Bisect note**: <why this phase is self-contained, or "N/A" if obvious>
+
+### Phase 2: <title>
+- **Step**: 1
+- [ ] <task>
+- [ ] <task>
+- **Files**: <list of files>
+- **Commit message**: `<message>`
+- **Bisect note**: <why this phase is self-contained, or "N/A" if obvious>
+
+### Phase 3: <title>
+- **Step**: 2
+- [ ] <task>
+- [ ] <task>
+- **Files**: <list of files>
+- **Commit message**: `<message>`
+- **Bisect note**: <why this phase is self-contained, or "N/A" if obvious>
+
+## Current Status
+- **Current Phase**: Not started
+- **Progress**: 0/<total phases>
+```
+
+For extensive plans (5+ phases), use a folder structure:
+- `.simplan/plans/<number>-<slug>/README.md` - Main overview
+- `.simplan/plans/<number>-<slug>/phase-1.md` - Phase details
+- etc.
+
+### Step 5: Update Backlog
+
+Update the item in `.simplan/ITEMS.md`:
+- Set status to `PLANNED`
+- Set the **Plan** field to the plan file path
+
+### Step 6: Show Result & Commit
+
+Display the created plan summary to the user.
+
+**Ask the user** if they want to commit the plan:
+- Use **AskUserQuestion** with options like "Yes, commit now" and "No, I'll commit later"
+- If yes, create a commit with message: `plan(<slug>): <title>`
+- If no, remind them to commit when ready
+
+---
+
+## Guidelines
+
+- **Keep phases small** - prefer many small phases over few large ones
+- **Keep plans concise** - focus on data structures and APIs, not full implementations
+- **Don't assume** - if something is unclear, ask!
+- **Scope guardrail** - if user suggests new capabilities, note them as separate items
+- **Consider testing** - note testing implications in phases
+- **Note risks** - flag dependencies or potential issues
+- **Bisect compliance** - every phase must pass precommit hooks; if in doubt, merge phases together rather than risk a broken intermediate state
+
+---
+
+## Next Steps
+
+After creating the plan (and optionally committing), tell the user:
+> Item #<number> is now PLANNED with <N> phases! To start executing, run:
+> - `/clear`
+> - `/item:exec [--model=opus|sonnet|haiku]`

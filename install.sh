@@ -60,7 +60,7 @@ cleanup_deprecated_files() {
     local cleaned=0
 
     # Find files matching pattern in destination
-    for dest_file in "$dest_dir"/$pattern 2>/dev/null; do
+    for dest_file in "$dest_dir"/$pattern; do
         [[ -e "$dest_file" ]] || continue
         filename=$(basename "$dest_file")
 

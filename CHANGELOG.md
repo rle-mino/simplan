@@ -5,6 +5,12 @@ All notable changes to Simplan will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-01-21
+
+### Fixed
+
+- Fixed syntax error in `install.sh` line 63 that caused installation to fail when piping from curl (removed invalid `2>/dev/null` redirection from for loop)
+
 ## [1.0.0] - 2025-01-20
 
 ### Added

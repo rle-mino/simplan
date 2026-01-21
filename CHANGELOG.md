@@ -5,6 +5,13 @@ All notable changes to Simplan will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Renamed `/item:validate` to `/item:review` for clearer semantics
+- Added plan recap table to `/item:plan` and `/item:brainstorm` output showing all phases at a glance
+
 ## [1.0.4] - 2026-01-21
 
 ### Changed
@@ -46,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `/item:plan` - Interactive planning with 1-12 questions
 - `/item:brainstorm` - Extensive brainstorming with 10-40 questions
 - `/item:exec` - Phase-by-phase execution with review
-- `/item:validate` - Complete and validate items
+- `/item:review` - Review and complete items
 - `/item:progress` - View backlog status
 - `/item:delete` - Remove items from backlog
 - `/item:help` - Workflow documentation

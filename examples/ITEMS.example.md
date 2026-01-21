@@ -66,7 +66,7 @@ COMMANDS:
 - /item:plan <number> - Create a plan for an item
 - /item:brainstorm <number> - Extensive brainstorming before planning
 - /item:exec [number] - Execute the next phase
-- /item:validate <number> - Complete and validate an item
+- /item:review <number> - Review and complete an item
 - /item:progress - Show all non-DONE items
 - /item:delete <number> - Remove an item
 -->

@@ -185,7 +185,17 @@ Update the item in `.simplan/ITEMS.md`:
 
 ### Step 6: Show Result & Commit
 
-Display the created plan summary to the user.
+Display the created plan summary to the user, including a **plan recap table**:
+
+```markdown
+## Plan Recap
+
+| Phase | Step | Title | Files | Commit |
+|-------|------|-------|-------|--------|
+| 1     | 1    | <phase title> | <file count> files | `<short commit msg>` |
+| 2     | 1    | <phase title> | <file count> files | `<short commit msg>` |
+| 3     | 2    | <phase title> | <file count> files | `<short commit msg>` |
+```
 
 **Ask the user** if they want to commit the plan:
 - Use **AskUserQuestion** with options like "Yes, commit now" and "No, I'll commit later"

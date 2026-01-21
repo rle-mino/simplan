@@ -1,5 +1,5 @@
 ---
-description: Validate a completed item and update plan status
+description: Review a completed item and update plan status
 argument-hint: [item-number]
 allowed-tools:
   - Read

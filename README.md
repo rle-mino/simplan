@@ -40,7 +40,7 @@ Simplan transforms how you work with Claude Code by adding a structured backlog 
 ```
 BACKLOG → PLANNED →  IN_PROGRESS  →  DONE
    ↑         ↑           ↑     ↓      ↑
- /add      /plan       /exec   ↔  IDLE /validate
+ /add      /plan       /exec   ↔  IDLE /review
          /brainstorm
 ```
 
@@ -107,9 +107,9 @@ mkdir -p .simplan/plans && touch .simplan/ITEMS.md
 
 4. **Complete the item:**
    ```
-   /item:validate 1
+   /item:review 1
    ```
-   Verifies all phases are complete and marks the item as done.
+   Reviews all phases are complete and marks the item as done.
 
 ## Commands
 
@@ -119,7 +119,7 @@ mkdir -p .simplan/plans && touch .simplan/ITEMS.md
 | `/item:plan [number]` | Plan an item with 1-12 questions |
 | `/item:brainstorm [number]` | Brainstorm extensively (10-40 questions) before planning |
 | `/item:exec [number]` | Execute the next phase of an item |
-| `/item:validate [number]` | Validate and complete an item |
+| `/item:review [number]` | Review and complete an item |
 | `/item:progress` | Show next 20 backlog items (not DONE) |
 | `/item:delete [number]` | Remove an item from the backlog |
 | `/item:help` | Show workflow documentation |
@@ -203,19 +203,19 @@ Supports `--model=opus|sonnet|haiku` to specify which model to use.
 /item:exec --model=haiku
 ```
 
-### `/item:validate [number]`
+### `/item:review [number]`
 
-Validates that all phases of an item are complete and marks it as `DONE`.
+Reviews that all phases of an item are complete and marks it as `DONE`.
 
 **Checks:**
 - All phase checkboxes are marked `[x]`
 - Plan progress shows completion
 - No remaining work
 
-If validation fails, shows what's incomplete.
+If review fails, shows what's incomplete.
 
 ```
-/item:validate 1
+/item:review 1
 ```
 
 ### `/item:progress`

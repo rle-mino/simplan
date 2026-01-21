@@ -14,7 +14,7 @@ This framework is designed for developers managing production code with serious 
 ```
 BACKLOG → PLANNED → IN_PROGRESS → DONE
    ↑         ↑           ↑    ↓      ↑
- /add      /plan       /exec ↔ IDLE /validate
+ /add      /plan       /exec ↔ IDLE /review
 ```
 
 **Statuses**:
@@ -87,7 +87,7 @@ Executes a single phase from the plan:
 
 ---
 
-#### `/item:validate` - Validate and complete an item
+#### `/item:review` - Review and complete an item
 **Goal**: Ensure all work is complete and properly recorded.
 
 Reviews a completed item to:
@@ -96,7 +96,7 @@ Reviews a completed item to:
 - Update any incomplete checkboxes in the plan
 - Mark the item as `DONE`
 
-**When to use**: After executing all phases, run validation to finalize the item.
+**When to use**: After executing all phases, run review to finalize the item.
 
 ---
 

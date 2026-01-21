@@ -376,6 +376,17 @@ Display:
 - Number of questions asked
 - Number of phases created
 - Plan summary
+- **Plan recap table**:
+
+```markdown
+## Plan Recap
+
+| Phase | Step | Title | Files | Commit |
+|-------|------|-------|-------|--------|
+| 1     | 1    | <phase title> | <file count> files | `<short commit msg>` |
+| 2     | 1    | <phase title> | <file count> files | `<short commit msg>` |
+| 3     | 2    | <phase title> | <file count> files | `<short commit msg>` |
+```
 
 **Ask the user** if they want to commit the plan:
 - Use **AskUserQuestion** with options like "Yes, commit now" and "No, I'll commit later"

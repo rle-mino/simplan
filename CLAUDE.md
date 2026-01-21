@@ -23,7 +23,7 @@ simplan/
 │   ├── item:plan.md    # Create phased plans (1-12 questions)
 │   ├── item:brainstorm.md  # Deep planning (10-40 questions)
 │   ├── item:exec.md    # Execute phases via agents
-│   ├── item:validate.md    # Complete items
+│   ├── item:review.md      # Review and complete items
 │   └── ...
 ├── agents/             # Specialized agent prompts
 │   ├── simplan:exec.md     # Implements code changes
@@ -76,7 +76,7 @@ mkdir -p .simplan/plans && touch .simplan/ITEMS.md
 
 There are no automated tests. To validate changes:
 1. Install locally in a test project
-2. Run through the full workflow: `/item:add` → `/item:plan` → `/item:exec` → `/item:validate`
+2. Run through the full workflow: `/item:add` → `/item:plan` → `/item:exec` → `/item:review`
 3. Test edge cases (no items, invalid numbers, etc.)
 
 ## Command File Format

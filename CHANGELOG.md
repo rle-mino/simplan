@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-01-21
+
+### Added
+
+- Complexity scoring system for items with smart recommendations
+- Optimized agent context with focused, minimal prompts
+- Deviation and verification rules for plan execution
+
+### Fixed
+
+- Fixed attempting to commit .simplan/ files (which are gitignored)
+
+### Changed
+
+- Standardized "Next Steps" formatting across all commands
+
 ## [1.1.0] - 2026-01-21
 
 ### Added

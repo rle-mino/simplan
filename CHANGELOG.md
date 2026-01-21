@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-01-22
+
+### Added
+
+- Build system for multi-platform support (Claude Code and OpenCode)
+  - Source templates in `src/` with placeholder syntax
+  - `build.sh` generates platform-specific files in `dist/`
+  - Updated `install.sh` to build and install for either platform
+- `/clear` tip in all command Next Steps sections to help manage context
+
 ## [1.2.0] - 2026-01-21
 
 ### Added

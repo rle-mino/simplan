@@ -175,6 +175,18 @@ else
     echo "Simplan v${NEW_VERSION} is now available in this project."
 fi
 
+# Add .simplan/ to .gitignore if it exists and entry is missing
+if [[ -f ".gitignore" ]]; then
+    if ! grep -q "^\.simplan/?$\|^\.simplan$" ".gitignore" 2>/dev/null; then
+        echo ".simplan/" >> ".gitignore"
+        echo -e "${GREEN}✓ Added .simplan/ to .gitignore${NC}"
+    fi
+elif [[ -d ".git" ]]; then
+    # Git repo exists but no .gitignore - create one
+    echo ".simplan/" > ".gitignore"
+    echo -e "${GREEN}✓ Created .gitignore with .simplan/${NC}"
+fi
+
 echo ""
 echo -e "${GREEN}Installation complete!${NC}"
 echo ""

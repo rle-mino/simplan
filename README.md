@@ -266,6 +266,8 @@ Simplan uses a `.simplan` directory in your project root:
         └── phase-2.md          # Phase 2 details
 ```
 
+> **Note:** The `.simplan/` directory is for local planning only and should **not** be committed to version control. The installer automatically adds it to `.gitignore`.
+
 ### ITEMS.md Format
 
 ```markdown

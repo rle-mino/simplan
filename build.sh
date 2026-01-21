@@ -106,6 +106,7 @@ process_command_opencode() {
     # Extract and transform frontmatter
     local in_frontmatter=false
     local frontmatter_done=false
+    local in_tools_list=false
     local transformed=""
     local frontmatter_content=""
     local body_content=""
@@ -126,12 +127,19 @@ process_command_opencode() {
             if [[ "$line" =~ ^argument-hint: ]]; then
                 continue
             fi
-            # Rename allowed-tools to tools for OpenCode (but keep format for now)
+            # Skip allowed-tools and its list items for OpenCode
+            # OpenCode doesn't use allowed-tools in the same way
             if [[ "$line" =~ ^allowed-tools: ]]; then
-                # For OpenCode, we'll keep the tools but note this is informational
-                # OpenCode doesn't restrict tools the same way
-                frontmatter_content+="# tools available (informational):"$'\n'
+                in_tools_list=true
                 continue
+            fi
+            # Skip tool list items (lines starting with "  - ")
+            if [[ "$in_tools_list" == true ]]; then
+                if [[ "$line" =~ ^[[:space:]]*-[[:space:]] ]]; then
+                    continue
+                else
+                    in_tools_list=false
+                fi
             fi
             frontmatter_content+="$line"$'\n'
         else

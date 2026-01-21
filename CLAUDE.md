@@ -24,6 +24,7 @@ simplan/
 │   ├── item:brainstorm.md  # Deep planning (10-40 questions)
 │   ├── item:exec.md    # Execute phases via agents
 │   ├── item:review.md      # Review and complete items
+│   ├── item:prune.md   # Remove all DONE items
 │   └── ...
 ├── agents/             # Specialized agent prompts
 │   ├── simplan:exec.md     # Implements code changes

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `/item:prune` command to remove all completed (DONE) items from the backlog at once
+
 ### Changed
 
 - Renamed `/item:validate` to `/item:review` for clearer semantics

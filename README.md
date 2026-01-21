@@ -122,6 +122,7 @@ mkdir -p .simplan/plans && touch .simplan/ITEMS.md
 | `/item:review [number]` | Review and complete an item |
 | `/item:progress` | Show next 20 backlog items (not DONE) |
 | `/item:delete [number]` | Remove an item from the backlog |
+| `/item:prune` | Remove all completed (DONE) items |
 | `/item:help` | Show workflow documentation |
 | `/item:update` | Update simplan to the latest version |
 
@@ -239,6 +240,21 @@ Asks for confirmation before deleting. If no number provided, shows available it
 
 ```
 /item:delete 3
+```
+
+### `/item:prune`
+
+Removes all completed (`DONE`) items from the backlog in one operation. Useful for cleaning up after finishing multiple items.
+
+**Process:**
+1. Lists all DONE items that will be removed
+2. Asks for confirmation
+3. Deletes associated plan files
+4. Removes items from backlog
+5. Renumbers remaining items to keep them sequential
+
+```
+/item:prune
 ```
 
 ### `/item:help`

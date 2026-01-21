@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -11,6 +11,7 @@ NC='\033[0m' # No Color
 
 REPO_URL="https://github.com/rle-mino/simplan.git"
 INSTALL_MODE="local"
+PLATFORM=""  # Will be auto-detected or specified
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -19,16 +20,31 @@ while [[ $# -gt 0 ]]; do
             INSTALL_MODE="global"
             shift
             ;;
+        --claude)
+            PLATFORM="claude"
+            shift
+            ;;
+        --opencode)
+            PLATFORM="opencode"
+            shift
+            ;;
         --help|-h)
             echo "Usage: curl -fsSL .../install.sh | bash -s -- [OPTIONS]"
             echo ""
-            echo "Install simplan commands and agents for Claude Code."
+            echo "Install simplan commands and agents for Claude Code or OpenCode."
             echo ""
             echo "Options:"
             echo "  --global, -g    Install globally (XDG compliant: ~/.config/simplan-source)"
+            echo "  --claude        Install for Claude Code (default if .claude/ exists)"
+            echo "  --opencode      Install for OpenCode (default if .opencode/ exists)"
             echo "  --help, -h      Show this help message"
             echo ""
-            echo "By default, installs locally to .claude/ in the current directory."
+            echo "Platform is auto-detected if not specified:"
+            echo "  - If .claude/ exists → Claude Code"
+            echo "  - If .opencode/ exists → OpenCode"
+            echo "  - Otherwise prompts for selection"
+            echo ""
+            echo "By default, installs locally to .claude/ or .opencode/ in the current directory."
             exit 0
             ;;
         *)
@@ -38,6 +54,54 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# Function to detect platform
+detect_platform() {
+    if [[ -n "$PLATFORM" ]]; then
+        return
+    fi
+    
+    local has_claude=false
+    local has_opencode=false
+    
+    # Check for existing installations
+    if [[ "$INSTALL_MODE" == "global" ]]; then
+        [[ -d "$HOME/.claude" ]] && has_claude=true
+        [[ -d "$HOME/.config/opencode" ]] && has_opencode=true
+    else
+        [[ -d ".claude" ]] && has_claude=true
+        [[ -d ".opencode" ]] && has_opencode=true
+    fi
+    
+    if [[ "$has_claude" == true && "$has_opencode" == false ]]; then
+        PLATFORM="claude"
+        echo -e "${CYAN}Detected Claude Code installation${NC}"
+    elif [[ "$has_opencode" == true && "$has_claude" == false ]]; then
+        PLATFORM="opencode"
+        echo -e "${CYAN}Detected OpenCode installation${NC}"
+    elif [[ "$has_claude" == true && "$has_opencode" == true ]]; then
+        echo -e "${YELLOW}Both Claude Code and OpenCode detected.${NC}"
+        echo "Please specify: --claude or --opencode"
+        exit 1
+    else
+        # No existing installation - prompt user
+        echo -e "${YELLOW}No existing installation detected.${NC}"
+        echo ""
+        echo "Which platform do you want to install for?"
+        echo "  1) Claude Code"
+        echo "  2) OpenCode"
+        echo ""
+        read -p "Enter choice [1-2]: " choice
+        case $choice in
+            1) PLATFORM="claude" ;;
+            2) PLATFORM="opencode" ;;
+            *)
+                echo -e "${RED}Invalid choice. Please run again with --claude or --opencode${NC}"
+                exit 1
+                ;;
+        esac
+    fi
+}
 
 # Create temp directory and clone
 TEMP_DIR=$(mktemp -d)
@@ -50,6 +114,60 @@ SOURCE_DIR="$TEMP_DIR/simplan"
 
 # Read version from cloned repo
 NEW_VERSION=$(cat "$SOURCE_DIR/VERSION" 2>/dev/null || echo "unknown")
+
+# Run the build to generate platform-specific files (if src/ exists)
+if [[ -d "$SOURCE_DIR/src" ]]; then
+    echo -e "${YELLOW}Building platform-specific files...${NC}"
+    cd "$SOURCE_DIR"
+    if ! bash ./build.sh; then
+        echo -e "${RED}Build failed${NC}"
+        exit 1
+    fi
+    cd - > /dev/null
+else
+    # Legacy mode: src/ doesn't exist, use old structure with commands/ and agents/
+    # This handles repos that haven't been updated yet
+    echo -e "${YELLOW}Using legacy structure (no src/ directory)${NC}"
+    mkdir -p "$SOURCE_DIR/dist/claude/commands" "$SOURCE_DIR/dist/claude/agents"
+    mkdir -p "$SOURCE_DIR/dist/opencode/commands" "$SOURCE_DIR/dist/opencode/agents"
+    
+    # Copy commands (Claude uses colons, OpenCode uses hyphens)
+    for file in "$SOURCE_DIR/commands"/*.md; do
+        [[ -e "$file" ]] || continue
+        filename=$(basename "$file")
+        cp "$file" "$SOURCE_DIR/dist/claude/commands/$filename"
+        # For OpenCode, replace colons with hyphens in filename
+        opencode_filename=$(echo "$filename" | sed 's/:/-/g')
+        cp "$file" "$SOURCE_DIR/dist/opencode/commands/$opencode_filename"
+    done
+    
+    # Copy agents
+    for file in "$SOURCE_DIR/agents"/*.md; do
+        [[ -e "$file" ]] || continue
+        filename=$(basename "$file")
+        cp "$file" "$SOURCE_DIR/dist/claude/agents/$filename"
+        opencode_filename=$(echo "$filename" | sed 's/:/-/g')
+        cp "$file" "$SOURCE_DIR/dist/opencode/agents/$opencode_filename"
+    done
+fi
+
+# Detect platform
+detect_platform
+
+echo -e "${CYAN}Installing for: ${PLATFORM}${NC}"
+
+# Set platform-specific variables
+if [[ "$PLATFORM" == "claude" ]]; then
+    PLATFORM_DIR=".claude"
+    COMMAND_PATTERN="item:*.md"
+    AGENT_PATTERN="simplan:*.md"
+    DIST_SUBDIR="claude"
+else
+    PLATFORM_DIR=".opencode"
+    COMMAND_PATTERN="item-*.md"
+    AGENT_PATTERN="simplan-*.md"
+    DIST_SUBDIR="opencode"
+fi
 
 # Function to clean up deprecated simplan files
 # Only removes files matching simplan patterns that no longer exist in source
@@ -79,19 +197,25 @@ cleanup_deprecated_files() {
 if [[ "$INSTALL_MODE" == "global" ]]; then
     # XDG Base Directory compliant paths
     SIMPLAN_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/simplan-source"
-    TARGET_DIR="$HOME/.claude"
+    
+    if [[ "$PLATFORM" == "claude" ]]; then
+        TARGET_DIR="$HOME/.claude"
+    else
+        TARGET_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
+    fi
+    
     VERSION_FILE="$SIMPLAN_CONFIG_DIR/.version"
 
     # Check for existing installation
     if [[ -f "$VERSION_FILE" ]]; then
         OLD_VERSION=$(cat "$VERSION_FILE")
         if [[ "$OLD_VERSION" == "$NEW_VERSION" ]]; then
-            echo -e "${CYAN}Reinstalling simplan v${NEW_VERSION} globally${NC}"
+            echo -e "${CYAN}Reinstalling simplan v${NEW_VERSION} globally for ${PLATFORM}${NC}"
         else
             echo -e "${CYAN}Updating simplan: v${OLD_VERSION} → v${NEW_VERSION}${NC}"
         fi
     else
-        echo -e "${YELLOW}Installing simplan v${NEW_VERSION} globally${NC}"
+        echo -e "${YELLOW}Installing simplan v${NEW_VERSION} globally for ${PLATFORM}${NC}"
     fi
 
     # Copy source to permanent location for symlinks
@@ -107,26 +231,26 @@ if [[ "$INSTALL_MODE" == "global" ]]; then
 
     # Clean up deprecated simplan files before adding new ones
     echo -e "${CYAN}Checking for deprecated files...${NC}"
-    cleanup_deprecated_files "$TARGET_DIR/commands" "$SIMPLAN_CONFIG_DIR/commands" "item:*.md"
-    cleanup_deprecated_files "$TARGET_DIR/agents" "$SIMPLAN_CONFIG_DIR/agents" "simplan:*.md"
+    cleanup_deprecated_files "$TARGET_DIR/commands" "$SIMPLAN_CONFIG_DIR/dist/$DIST_SUBDIR/commands" "$COMMAND_PATTERN"
+    cleanup_deprecated_files "$TARGET_DIR/agents" "$SIMPLAN_CONFIG_DIR/dist/$DIST_SUBDIR/agents" "$AGENT_PATTERN"
 
     # Symlink commands
-    for file in "$SIMPLAN_CONFIG_DIR/commands"/*.md; do
+    for file in "$SIMPLAN_CONFIG_DIR/dist/$DIST_SUBDIR/commands"/*.md; do
         [[ -e "$file" ]] || continue
         filename=$(basename "$file")
         ln -sf "$file" "$TARGET_DIR/commands/$filename"
     done
 
     # Symlink agents
-    for file in "$SIMPLAN_CONFIG_DIR/agents"/*.md; do
+    for file in "$SIMPLAN_CONFIG_DIR/dist/$DIST_SUBDIR/agents"/*.md; do
         [[ -e "$file" ]] || continue
         filename=$(basename "$file")
         ln -sf "$file" "$TARGET_DIR/agents/$filename"
     done
 
     echo -e "${GREEN}✓ Installed source to $SIMPLAN_CONFIG_DIR${NC}"
-    echo -e "${GREEN}✓ Symlinked commands to ~/.claude/commands/${NC}"
-    echo -e "${GREEN}✓ Symlinked agents to ~/.claude/agents/${NC}"
+    echo -e "${GREEN}✓ Symlinked commands to $TARGET_DIR/commands/${NC}"
+    echo -e "${GREEN}✓ Symlinked agents to $TARGET_DIR/agents/${NC}"
     echo ""
     echo "Simplan v${NEW_VERSION} is now available in all projects."
     echo ""
@@ -135,19 +259,19 @@ if [[ "$INSTALL_MODE" == "global" ]]; then
     echo -e "${CYAN}  echo '.simplan/' >> .gitignore${NC}"
 
 else
-    TARGET_DIR=".claude"
+    TARGET_DIR="$PLATFORM_DIR"
     VERSION_FILE="$TARGET_DIR/.simplan-version"
 
     # Check for existing installation
     if [[ -f "$VERSION_FILE" ]]; then
         OLD_VERSION=$(cat "$VERSION_FILE")
         if [[ "$OLD_VERSION" == "$NEW_VERSION" ]]; then
-            echo -e "${CYAN}Reinstalling simplan v${NEW_VERSION} locally${NC}"
+            echo -e "${CYAN}Reinstalling simplan v${NEW_VERSION} locally for ${PLATFORM}${NC}"
         else
             echo -e "${CYAN}Updating simplan: v${OLD_VERSION} → v${NEW_VERSION}${NC}"
         fi
     else
-        echo -e "${YELLOW}Installing simplan v${NEW_VERSION} locally to .claude/${NC}"
+        echo -e "${YELLOW}Installing simplan v${NEW_VERSION} locally to $TARGET_DIR/${NC}"
     fi
 
     # Create directories
@@ -155,17 +279,17 @@ else
 
     # Clean up deprecated simplan files before adding new ones
     echo -e "${CYAN}Checking for deprecated files...${NC}"
-    cleanup_deprecated_files "$TARGET_DIR/commands" "$SOURCE_DIR/commands" "item:*.md"
-    cleanup_deprecated_files "$TARGET_DIR/agents" "$SOURCE_DIR/agents" "simplan:*.md"
+    cleanup_deprecated_files "$TARGET_DIR/commands" "$SOURCE_DIR/dist/$DIST_SUBDIR/commands" "$COMMAND_PATTERN"
+    cleanup_deprecated_files "$TARGET_DIR/agents" "$SOURCE_DIR/dist/$DIST_SUBDIR/agents" "$AGENT_PATTERN"
 
     # Copy commands
-    for file in "$SOURCE_DIR/commands"/*.md; do
+    for file in "$SOURCE_DIR/dist/$DIST_SUBDIR/commands"/*.md; do
         [[ -e "$file" ]] || continue
         cp "$file" "$TARGET_DIR/commands/"
     done
 
     # Copy agents
-    for file in "$SOURCE_DIR/agents"/*.md; do
+    for file in "$SOURCE_DIR/dist/$DIST_SUBDIR/agents"/*.md; do
         [[ -e "$file" ]] || continue
         cp "$file" "$TARGET_DIR/agents/"
     done
@@ -173,8 +297,8 @@ else
     # Write version file
     echo "$NEW_VERSION" > "$VERSION_FILE"
 
-    echo -e "${GREEN}✓ Copied commands to .claude/commands/${NC}"
-    echo -e "${GREEN}✓ Copied agents to .claude/agents/${NC}"
+    echo -e "${GREEN}✓ Copied commands to $TARGET_DIR/commands/${NC}"
+    echo -e "${GREEN}✓ Copied agents to $TARGET_DIR/agents/${NC}"
     echo ""
     echo "Simplan v${NEW_VERSION} is now available in this project."
 fi
@@ -199,10 +323,22 @@ echo ""
 echo "Initialize simplan in your project:"
 echo "  mkdir -p .simplan/plans && touch .simplan/ITEMS.md"
 echo ""
-echo "Get started:"
-echo "  /item:add           - Add a new work item"
-echo "  /item:plan 1        - Plan item #1"
-echo "  # OR"
-echo "  /item:brainstorm 1  - Brainstorm to plan item #1"
-echo "  /item:exec          - Execute the next phase of the current item"
-echo "  /item:help          - Show full documentation"
+
+# Show platform-specific command examples
+if [[ "$PLATFORM" == "claude" ]]; then
+    echo "Get started:"
+    echo "  /item:add           - Add a new work item"
+    echo "  /item:plan 1        - Plan item #1"
+    echo "  # OR"
+    echo "  /item:brainstorm 1  - Brainstorm to plan item #1"
+    echo "  /item:exec          - Execute the next phase of the current item"
+    echo "  /item:help          - Show full documentation"
+else
+    echo "Get started:"
+    echo "  /item-add           - Add a new work item"
+    echo "  /item-plan 1        - Plan item #1"
+    echo "  # OR"
+    echo "  /item-brainstorm 1  - Brainstorm to plan item #1"
+    echo "  /item-exec          - Execute the next phase of the current item"
+    echo "  /item-help          - Show full documentation"
+fi

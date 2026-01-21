@@ -16,11 +16,17 @@ allowed-tools:
 
 You are updating the simplan framework. Follow these steps in order:
 
-### Step 1: Detect Installation Mode
+### Step 1: Detect Installation Mode and Platform
 
-Check for version files to determine installation type:
+Check for version files to determine installation type and platform:
+
+**Claude Code:**
 - `${XDG_CONFIG_HOME:-$HOME/.config}/simplan-source/.version` → Global installation
 - `.claude/.simplan-version` → Local installation
+
+**OpenCode:**
+- `${XDG_CONFIG_HOME:-$HOME/.config}/simplan-source/.version` → Global installation
+- `.opencode/.simplan-version` → Local installation
 
 Read the version file to get current installed version.
 
@@ -94,5 +100,5 @@ Tell the user:
 
 > Simplan updated to <version>!
 >
-> To load the new commands, restart Claude Code:
-> `/exit` then reopen
+> To load the new commands, restart {{PLATFORM_NAME}}:
+> `{{EXIT_COMMAND}}` then reopen

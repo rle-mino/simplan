@@ -85,7 +85,7 @@ Based on complexity assessment, recommend:
 > To plan this item, run:
 > `/item:plan <number>`
 >
-> 💡 Tip: Run `/clear` to reset context before planning.
+> Tip: Run `/clear` to reset context before planning.
 
 **For complex items:**
 > Item #<number> added! This seems complex—I'd recommend brainstorming first.
@@ -95,4 +95,4 @@ Based on complexity assessment, recommend:
 >
 > Or if you already know the approach: `/item:plan <number>`
 >
-> 💡 Tip: Run `/clear` to reset context before planning.
+> Tip: Run `/clear` to reset context before planning.

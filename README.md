@@ -1,6 +1,6 @@
 # Simplan
 
-A structured workflow framework for Claude Code that helps you plan and execute code changes through atomic, reviewable phases.
+A structured workflow framework for **Claude Code** and **OpenCode** that helps you plan and execute code changes through atomic, reviewable phases.
 
 ## Philosophy
 
@@ -10,7 +10,7 @@ This framework is designed for developers managing production code with serious 
 
 ### Why Simplan exists
 
-Claude Code is powerful, but without structure it can produce sprawling changes that are hard to review, test, and debug. Simplan addresses this by:
+AI coding assistants are powerful, but without structure they can produce sprawling changes that are hard to review, test, and debug. Simplan addresses this by:
 
 1. **Optimizing context usage** — Sub-agents handle execution and review with focused, minimal context. The executor knows only the current phase; the reviewer sees only the problem statement, not implementation details. This "fresh eyes" approach catches issues that the implementer might miss.
 
@@ -33,9 +33,20 @@ Claude Code is powerful, but without structure it can produce sprawling changes 
 - Learning projects where experimentation is the goal
 - Situations where you just need something working *right now*
 
+## Supported Platforms
+
+Simplan works with both:
+
+| Platform | Config Directory | Command Style |
+|----------|------------------|---------------|
+| **Claude Code** | `.claude/` | `/item:add`, `/item:plan`, etc. |
+| **OpenCode** | `.opencode/` | `/item-add`, `/item-plan`, etc. |
+
+The installer auto-detects your platform or lets you choose.
+
 ## Overview
 
-Simplan transforms how you work with Claude Code by adding a structured backlog and phased execution workflow:
+Simplan transforms how you work with AI coding assistants by adding a structured backlog and phased execution workflow:
 
 ```
 BACKLOG → PLANNED →  IN_PROGRESS  →  DONE
@@ -48,9 +59,9 @@ BACKLOG → PLANNED →  IN_PROGRESS  →  DONE
 
 - **Backlog management** - Track work items with clear statuses
 
-- **Interactive planning** - Break work into atomic, committable phases through focused Q&A (1-12 questions with `/item:plan`)
+- **Interactive planning** - Break work into atomic, committable phases through focused Q&A (1-12 questions with `/item:plan` or `/item-plan`)
 
-- **Deep brainstorming** - For complex or ambiguous items, `/item:brainstorm` conducts extensive exploration (10-40 questions) covering requirements, UX, technical approach, edge cases, security, and more
+- **Deep brainstorming** - For complex or ambiguous items, `/item:brainstorm` (or `/item-brainstorm`) conducts extensive exploration (10-40 questions) covering requirements, UX, technical approach, edge cases, security, and more
 
 - **Phased execution** - Execute one phase at a time with automatic review
 
@@ -63,9 +74,11 @@ BACKLOG → PLANNED →  IN_PROGRESS  →  DONE
 | `/item:plan` | 1-12 (quick) | Clear, straightforward items |
 | `/item:brainstorm` | 10-40 (thorough) | Complex features, unclear requirements, architectural decisions |
 
-Superplan includes web research (Context7 for library docs, WebSearch for best practices) and produces a comprehensive plan with full Q&A log, research findings, and detailed phase breakdowns.
+Brainstorm includes web research (Context7 for library docs, WebSearch for best practices) and produces a comprehensive plan with full Q&A log, research findings, and detailed phase breakdowns.
 
 ## Installation
+
+The installer auto-detects your platform (Claude Code or OpenCode) based on existing configuration directories.
 
 **Global install** (available in all projects):
 
@@ -79,6 +92,16 @@ curl -fsSL https://raw.githubusercontent.com/rle-mino/simplan/main/install.sh | 
 curl -fsSL https://raw.githubusercontent.com/rle-mino/simplan/main/install.sh | bash
 ```
 
+**Specify platform explicitly:**
+
+```bash
+# For Claude Code
+curl -fsSL https://raw.githubusercontent.com/rle-mino/simplan/main/install.sh | bash -s -- --claude
+
+# For OpenCode
+curl -fsSL https://raw.githubusercontent.com/rle-mino/simplan/main/install.sh | bash -s -- --opencode
+```
+
 Then initialize simplan in your project:
 
 ```bash
@@ -86,6 +109,8 @@ mkdir -p .simplan/plans && touch .simplan/ITEMS.md
 ```
 
 ## Quick Start
+
+### Claude Code
 
 1. **Add a work item:**
    ```
@@ -111,24 +136,46 @@ mkdir -p .simplan/plans && touch .simplan/ITEMS.md
    ```
    Reviews all phases are complete and marks the item as done.
 
+### OpenCode
+
+1. **Add a work item:**
+   ```
+   /item-add
+   ```
+
+2. **Plan the item:**
+   ```
+   /item-plan 1
+   ```
+
+3. **Execute phases:**
+   ```
+   /item-exec
+   ```
+
+4. **Complete the item:**
+   ```
+   /item-review 1
+   ```
+
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `/item:add` | Add a new item to the backlog |
-| `/item:plan [number]` | Plan an item with 1-12 questions |
-| `/item:brainstorm [number]` | Brainstorm extensively (10-40 questions) before planning |
-| `/item:exec [number]` | Execute the next phase of an item |
-| `/item:review [number]` | Review and complete an item |
-| `/item:progress` | Show next 20 backlog items (not DONE) |
-| `/item:delete [number]` | Remove an item from the backlog |
-| `/item:prune` | Remove all completed (DONE) items |
-| `/item:help` | Show workflow documentation |
-| `/item:update` | Update simplan to the latest version |
+| Claude Code | OpenCode | Description |
+|-------------|----------|-------------|
+| `/item:add` | `/item-add` | Add a new item to the backlog |
+| `/item:plan [number]` | `/item-plan [number]` | Plan an item with 1-12 questions |
+| `/item:brainstorm [number]` | `/item-brainstorm [number]` | Brainstorm extensively (10-40 questions) before planning |
+| `/item:exec [number]` | `/item-exec [number]` | Execute the next phase of an item |
+| `/item:review [number]` | `/item-review [number]` | Review and complete an item |
+| `/item:progress` | `/item-progress` | Show next 20 backlog items (not DONE) |
+| `/item:delete [number]` | `/item-delete [number]` | Remove an item from the backlog |
+| `/item:prune` | `/item-prune` | Remove all completed (DONE) items |
+| `/item:help` | `/item-help` | Show workflow documentation |
+| `/item:updatesimplan` | `/item-updatesimplan` | Update simplan to the latest version |
 
-### `/item:add`
+### `/item:add` / `/item-add`
 
-Adds a new work item to the backlog. Claude will ask you for:
+Adds a new work item to the backlog. The assistant will ask you for:
 
 - **Title** - Short description of the work
 - **Type** - Feature, Fix, Refactor, Docs, or Test
@@ -136,11 +183,7 @@ Adds a new work item to the backlog. Claude will ask you for:
 
 The item is created with status `BACKLOG` and assigned the next available number.
 
-```
-/item:add
-```
-
-### `/item:plan [number]`
+### `/item:plan` / `/item-plan`
 
 Creates a phased execution plan for an item through focused Q&A (1-12 questions across up to 3 rounds).
 
@@ -152,11 +195,7 @@ Creates a phased execution plan for an item through focused Q&A (1-12 questions 
 
 If no number is provided, shows available items and asks which to plan.
 
-```
-/item:plan 1
-```
-
-### `/item:brainstorm [number]`
+### `/item:brainstorm` / `/item-brainstorm`
 
 Conducts extensive brainstorming (10-40 questions) before creating a comprehensive plan. Use this for complex or ambiguous items.
 
@@ -177,16 +216,12 @@ Conducts extensive brainstorming (10-40 questions) before creating a comprehensi
 4. Validates understanding with you
 5. Creates detailed plan with full Q&A log and research findings
 
-```
-/item:brainstorm 1
-```
-
-### `/item:exec [number]`
+### `/item:exec` / `/item-exec`
 
 Executes the next incomplete phase of an item. Uses two specialized agents:
 
-1. **simplexecutor** - Implements the phase following the plan precisely
-2. **simpreviewer** - Reviews changes, validates quality, can request fixes
+1. **simplan:exec / simplan-exec** - Implements the phase following the plan precisely
+2. **simplan:review / simplan-review** - Reviews changes, validates quality, can request fixes
 
 **Process:**
 1. Finds the next incomplete phase
@@ -198,13 +233,7 @@ Executes the next incomplete phase of an item. Uses two specialized agents:
 
 Supports `--model=opus|sonnet|haiku` to specify which model to use.
 
-```
-/item:exec
-/item:exec 1
-/item:exec --model=haiku
-```
-
-### `/item:review [number]`
+### `/item:review` / `/item-review`
 
 Reviews that all phases of an item are complete and marks it as `DONE`.
 
@@ -215,11 +244,7 @@ Reviews that all phases of an item are complete and marks it as `DONE`.
 
 If review fails, shows what's incomplete.
 
-```
-/item:review 1
-```
-
-### `/item:progress`
+### `/item:progress` / `/item-progress`
 
 Shows the next 20 backlog items that are not `DONE`. Displays:
 
@@ -228,21 +253,13 @@ Shows the next 20 backlog items that are not `DONE`. Displays:
 - Type (Feature/Fix/etc.)
 - Progress for planned items (e.g., "2/5 phases")
 
-```
-/item:progress
-```
-
-### `/item:delete [number]`
+### `/item:delete` / `/item-delete`
 
 Removes an item from the backlog. Also deletes the associated plan file if one exists.
 
 Asks for confirmation before deleting. If no number provided, shows available items.
 
-```
-/item:delete 3
-```
-
-### `/item:prune`
+### `/item:prune` / `/item-prune`
 
 Removes all completed (`DONE`) items from the backlog in one operation. Useful for cleaning up after finishing multiple items.
 
@@ -253,11 +270,7 @@ Removes all completed (`DONE`) items from the backlog in one operation. Useful f
 4. Removes items from backlog
 5. Renumbers remaining items to keep them sequential
 
-```
-/item:prune
-```
-
-### `/item:help`
+### `/item:help` / `/item-help`
 
 Displays comprehensive documentation about the simplan workflow, including:
 
@@ -266,11 +279,7 @@ Displays comprehensive documentation about the simplan workflow, including:
 - Planning vs brainstorming guidance
 - Best practices
 
-```
-/item:help
-```
-
-### `/item:update`
+### `/item:updatesimplan` / `/item-updatesimplan`
 
 Updates simplan framework files (commands, agents) to the latest version from the repository.
 
@@ -282,10 +291,6 @@ Updates simplan framework files (commands, agents) to the latest version from th
 **What it does NOT touch:**
 - Your project data (`.simplan/ITEMS.md`, `.simplan/plans/`)
 - Any work items or plans you've created
-
-```
-/item:update
-```
 
 ## Item Statuses
 
@@ -362,12 +367,12 @@ Simplan uses a `.simplan` directory in your project root:
 
 ### Planning vs Brainstorming
 
-Use `/item:plan` for:
+Use `/item:plan` (or `/item-plan`) for:
 - Straightforward features with clear requirements
 - Bug fixes with known scope
 - Small refactoring tasks
 
-Use `/item:brainstorm` for:
+Use `/item:brainstorm` (or `/item-brainstorm`) for:
 - Complex features with unclear requirements
 - Architectural decisions
 - Features that touch many parts of the codebase
@@ -377,10 +382,49 @@ Use `/item:brainstorm` for:
 
 Simplan uses specialized sub-agents to optimize context and catch mistakes:
 
-- **simplexecutor** — Implements a single phase following the plan precisely. It sees only the current phase, keeping context focused.
-- **simpreviewer** — Reviews changes with "fresh eyes." It receives only the problem statement and the diff, not the implementation details. This separation helps catch issues the implementer might overlook.
+- **simplan:exec / simplan-exec** — Implements a single phase following the plan precisely. It sees only the current phase, keeping context focused.
+- **simplan:review / simplan-review** — Reviews changes with "fresh eyes." It receives only the problem statement and the diff, not the implementation details. This separation helps catch issues the implementer might overlook.
 
 The agents work as a pair: execute → review → fix if needed → commit. This mimics a real code review workflow, but faster.
+
+## Development
+
+For contributors working on simplan itself:
+
+### Building
+
+The project uses a build system to generate platform-specific files from source templates:
+
+```bash
+./build.sh
+```
+
+This generates:
+- `dist/claude/` - Files for Claude Code
+- `dist/opencode/` - Files for OpenCode
+
+### Source Structure
+
+```
+simplan/
+├── src/
+│   ├── commands/         # Command templates with {{PLACEHOLDER}} syntax
+│   └── agents/           # Agent templates
+├── dist/                 # Generated platform-specific files (gitignored)
+│   ├── claude/
+│   └── opencode/
+├── build.sh              # Build script
+├── install.sh            # Installation script
+└── examples/             # Example ITEMS.md format
+```
+
+### Template Placeholders
+
+- `{{PLATFORM_CONFIG_DIR}}` → `.claude` or `.opencode`
+- `{{PLATFORM_NAME}}` → `Claude Code` or `OpenCode`
+- `{{MODEL:opus}}` → `opus` or `anthropic/claude-sonnet-4-20250514`
+- `{{AGENT:exec}}` → `simplan:exec` or `simplan-exec`
+- `{{EXIT_COMMAND}}` → `/exit` or `quit`
 
 ## Best Practices
 

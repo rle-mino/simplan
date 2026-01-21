@@ -72,7 +72,7 @@ Execute a phase for the current item by delegating to agents.
    - If parallel: go to step 8a
    - If sequential: go to step 8 with first phase only
 
-8. **Execute via simplan:exec** (single phase):
+8. **Execute via {{AGENT:exec}}** (single phase):
 
    **First, read the plan file and extract the phase content.** Then inline it into the Task prompt:
 
@@ -94,7 +94,7 @@ Execute a phase for the current item by delegating to agents.
      2. Implement the changes as specified
      3. Update the plan with implementation notes
      4. Mark tasks as complete",
-     subagent_type="simplan:exec",
+     subagent_type="{{AGENT:exec}}",
      model=<specified model>,
      description="Execute Phase <N> of item #<X>"
    )
@@ -104,7 +104,7 @@ Execute a phase for the current item by delegating to agents.
 
    After execution completes, go to step 9.
 
-8a. **Execute via simplan:exec** (parallel phases):
+8a. **Execute via {{AGENT:exec}}** (parallel phases):
 
     **First, read the plan file and extract each phase's content.** Then launch up to 4 Task calls **in a single message** (parallel execution):
 
@@ -128,7 +128,7 @@ Execute a phase for the current item by delegating to agents.
       2. Implement the changes as specified
       3. Update the plan with implementation notes
       4. Mark tasks as complete",
-      subagent_type="simplan:exec",
+      subagent_type="{{AGENT:exec}}",
       model=<specified model>,
       description="Execute Phase <N> of item #<X>"
     )
@@ -138,7 +138,7 @@ Execute a phase for the current item by delegating to agents.
 
     Wait for ALL tasks to complete, then go to step 9a.
 
-9. **Review via simplan:review** (single phase):
+9. **Review via {{AGENT:review}}** (single phase):
    ```
    Task(
      prompt="Review Phase <N> of item #<X>.
@@ -149,13 +149,13 @@ Execute a phase for the current item by delegating to agents.
 
      Review the code changes with fresh eyes. Use `git diff` to see what changed.
      Validate quality and correctness based on the problem statement alone.",
-     subagent_type="simplan:review",
+     subagent_type="{{AGENT:review}}",
      description="Review Phase <N> of item #<X>"
    )
    ```
    After review completes, go to step 10.
 
-9a. **Review via simplan:review** (combined review for parallel phases):
+9a. **Review via {{AGENT:review}}** (combined review for parallel phases):
     Single review for all phases that ran in parallel:
     ```
     Task(
@@ -171,7 +171,7 @@ Execute a phase for the current item by delegating to agents.
       Review the combined code changes with fresh eyes. Use `git diff` to see what changed.
       Validate quality and correctness for EACH problem statement.
       Mark ALL phases if approved, or identify which specific phases need work.",
-      subagent_type="simplan:review",
+      subagent_type="{{AGENT:review}}",
       description="Review Phases <X>, <Y>, <Z> of item #<N>"
     )
     ```
@@ -202,4 +202,4 @@ If there are remaining phases, tell the user:
 > To continue with the next step, run:
 > `/item:exec`
 >
-> 💡 Tip: Run `/clear` to reset context before the next step.
+> Tip: Run `/clear` to reset context before the next step.

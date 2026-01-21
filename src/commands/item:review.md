@@ -28,7 +28,7 @@ When displaying or updating item statuses, use these emojis:
 
 ## Task
 
-Validate item #$ARGUMENTS by delegating to the **simplan:review** agent.
+Validate item #$ARGUMENTS by delegating to the **{{AGENT:review}}** agent.
 
 ### Steps
 
@@ -38,7 +38,7 @@ Validate item #$ARGUMENTS by delegating to the **simplan:review** agent.
 
 3. **Get plan path**: Read the item's Plan path from the backlog
 
-4. **Delegate to simplan:review**: Use the Task tool to spawn the review agent:
+4. **Delegate to {{AGENT:review}}**: Use the Task tool to spawn the review agent:
    ```
    Task(
      prompt="Validate item #<number>.
@@ -54,7 +54,7 @@ Validate item #$ARGUMENTS by delegating to the **simplan:review** agent.
      5. Update the plan file with completion status
      6. Update backlog status to DONE if all phases complete
      7. Generate summary of what was accomplished",
-     subagent_type="simplan:review",
+     subagent_type="{{AGENT:review}}",
      description="Validate item #<number>"
    )
    ```
@@ -73,7 +73,7 @@ Based on validation result, tell the user:
 > To see remaining work, run:
 > `/item:progress`
 >
-> 💡 Tip: Run `/clear` to reset context before starting new work.
+> Tip: Run `/clear` to reset context before starting new work.
 
 **If issues were found:**
 > Validation found issues that need to be fixed.
@@ -81,4 +81,4 @@ Based on validation result, tell the user:
 > To fix and re-run, run:
 > `/item:exec <phase-number>`
 >
-> 💡 Tip: Run `/clear` to reset context before fixing.
+> Tip: Run `/clear` to reset context before fixing.

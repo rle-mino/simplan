@@ -242,4 +242,4 @@ After creating the plan, tell the user:
 > To start executing, run:
 > `/item:exec`
 >
-> 💡 Tip: Run `/clear` to reset context before executing.
+> Tip: Run `/clear` to reset context before executing.

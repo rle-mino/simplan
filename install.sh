@@ -129,6 +129,10 @@ if [[ "$INSTALL_MODE" == "global" ]]; then
     echo -e "${GREEN}✓ Symlinked agents to ~/.claude/agents/${NC}"
     echo ""
     echo "Simplan v${NEW_VERSION} is now available in all projects."
+    echo ""
+    echo -e "${CYAN}Note: Add .simplan/ to each project's .gitignore to avoid${NC}"
+    echo -e "${CYAN}committing plan files. Run this in your project directory:${NC}"
+    echo -e "${CYAN}  echo '.simplan/' >> .gitignore${NC}"
 
 else
     TARGET_DIR=".claude"
@@ -175,16 +179,18 @@ else
     echo "Simplan v${NEW_VERSION} is now available in this project."
 fi
 
-# Add .simplan/ to .gitignore if it exists and entry is missing
-if [[ -f ".gitignore" ]]; then
-    if ! grep -q "^\.simplan/?$\|^\.simplan$" ".gitignore" 2>/dev/null; then
-        echo ".simplan/" >> ".gitignore"
-        echo -e "${GREEN}✓ Added .simplan/ to .gitignore${NC}"
+# Add .simplan/ to .gitignore (local install only - global install handles this at runtime)
+if [[ "$INSTALL_MODE" == "local" ]]; then
+    if [[ -f ".gitignore" ]]; then
+        if ! grep -q "^\.simplan/?$\|^\.simplan$" ".gitignore" 2>/dev/null; then
+            echo ".simplan/" >> ".gitignore"
+            echo -e "${GREEN}✓ Added .simplan/ to .gitignore${NC}"
+        fi
+    elif [[ -d ".git" ]]; then
+        # Git repo exists but no .gitignore - create one
+        echo ".simplan/" > ".gitignore"
+        echo -e "${GREEN}✓ Created .gitignore with .simplan/${NC}"
     fi
-elif [[ -d ".git" ]]; then
-    # Git repo exists but no .gitignore - create one
-    echo ".simplan/" > ".gitignore"
-    echo -e "${GREEN}✓ Created .gitignore with .simplan/${NC}"
 fi
 
 echo ""

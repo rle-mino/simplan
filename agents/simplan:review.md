@@ -47,7 +47,28 @@ Based ONLY on the problem statement(s) and the git diff:
 - Do the changes work well together (no conflicts)?
 - Are there any cross-cutting issues?
 
-### Step 3: Code Quality Review
+### Step 3: Three-Level Verification
+
+For each file mentioned in the changes, verify at three levels:
+
+**Level 1 - Existence:**
+- [ ] All files mentioned in the phase exist
+- [ ] No files were accidentally deleted
+
+**Level 2 - Substance:**
+- [ ] No placeholder comments (`// TODO`, `// FIXME`, `/* implement later */`)
+- [ ] No empty functions or stub implementations
+- [ ] No hardcoded test values that should be real
+- [ ] Actual logic, not just scaffolding
+
+**Level 3 - Wiring:**
+- [ ] New exports are imported where needed
+- [ ] New routes/endpoints are registered
+- [ ] New components are used somewhere
+- [ ] Config changes are reflected in usage
+- [ ] No orphaned code (created but never called)
+
+### Step 4: Code Quality Review
 
 Check the code for:
 - **Correctness**: Does it do what it should?
@@ -55,7 +76,7 @@ Check the code for:
 - **Simplicity**: Is it as simple as possible?
 - **Safety**: Any security or stability concerns?
 
-### Step 4: Validate and Update
+### Step 5: Validate and Update
 
 Now read the plan file to update status.
 
@@ -70,7 +91,7 @@ Now read the plan file to update status.
 - Note which phases were approved (if any) - do NOT modify approved phases
 - Re-review only the fixed phase(s)
 
-### Step 5: Finalize
+### Step 6: Finalize
 
 After approval:
 - Update the plan file with final status

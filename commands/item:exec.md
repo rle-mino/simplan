@@ -73,14 +73,24 @@ Execute a phase for the current item by delegating to agents.
    - If sequential: go to step 8 with first phase only
 
 8. **Execute via simplan:exec** (single phase):
+
+   **First, read the plan file and extract the phase content.** Then inline it into the Task prompt:
+
    ```
    Task(
      prompt="Execute Phase <N> of item #<X>.
 
      Plan file: <plan-path>
 
+     ## Phase Content (from plan)
+     <INLINE THE FULL PHASE SECTION HERE - title, tasks, files, commit message, bisect note>
+
+     ## Item Context
+     - **Title**: <item title from backlog>
+     - **Description**: <item description from backlog>
+
      Follow your execution process:
-     1. Read the plan and understand the phase requirements
+     1. Understand the phase requirements (already provided above)
      2. Implement the changes as specified
      3. Update the plan with implementation notes
      4. Mark tasks as complete",
@@ -89,10 +99,14 @@ Execute a phase for the current item by delegating to agents.
      description="Execute Phase <N> of item #<X>"
    )
    ```
+
+   **Why inline?** The @ syntax doesn't cross Task boundaries. Inlining ensures the agent has correct context immediately without spending tokens reading files.
+
    After execution completes, go to step 9.
 
 8a. **Execute via simplan:exec** (parallel phases):
-    Launch up to 4 Task calls **in a single message** (parallel execution):
+
+    **First, read the plan file and extract each phase's content.** Then launch up to 4 Task calls **in a single message** (parallel execution):
 
     ```
     Task(
@@ -100,10 +114,17 @@ Execute a phase for the current item by delegating to agents.
 
       Plan file: <plan-path>
 
+      ## Phase Content (from plan)
+      <INLINE THE FULL PHASE SECTION HERE - title, tasks, files, commit message, bisect note>
+
+      ## Item Context
+      - **Title**: <item title from backlog>
+      - **Description**: <item description from backlog>
+
       IMPORTANT: Other phases are running in parallel. Only modify files listed in YOUR phase.
 
       Follow your execution process:
-      1. Read the plan and understand the phase requirements
+      1. Understand the phase requirements (already provided above)
       2. Implement the changes as specified
       3. Update the plan with implementation notes
       4. Mark tasks as complete",
@@ -112,6 +133,8 @@ Execute a phase for the current item by delegating to agents.
       description="Execute Phase <N> of item #<X>"
     )
     ```
+
+    **Why inline?** The @ syntax doesn't cross Task boundaries. Inlining ensures each agent has its phase context immediately.
 
     Wait for ALL tasks to complete, then go to step 9a.
 

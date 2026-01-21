@@ -39,6 +39,33 @@ After completing the tasks, update the plan file:
 - Add implementation notes
 - Note any deviations from the plan (and why)
 
+## Deviation Rules
+
+When you encounter issues not explicitly in the plan, follow these rules:
+
+### Auto-Fix (no permission needed)
+Fix these immediately and note in implementation notes:
+- **Type errors** and broken imports
+- **Missing error handling** that would cause crashes
+- **Security vulnerabilities** (XSS, SQL injection, missing auth checks)
+- **Missing null/undefined checks** that would cause runtime errors
+- **Broken tests** caused by your changes
+
+### Note and Continue
+Document these in implementation notes but proceed:
+- **Minor refactoring** needed to make the change work cleanly
+- **Small missing pieces** obvious from context (e.g., forgotten export)
+- **Test updates** required by interface changes
+
+### Stop and Report
+Do NOT proceed - report to reviewer:
+- **Architectural changes** beyond the phase scope
+- **New dependencies** not mentioned in the plan
+- **Schema/database changes** not planned
+- **Fundamental approach issues** (plan won't work as written)
+
+When in doubt, note it and continue. The reviewer will catch anything significant.
+
 ## Guidelines
 
 ### Do:
@@ -46,6 +73,7 @@ After completing the tasks, update the plan file:
 - Match existing code style
 - Make minimal, focused changes
 - Document what you did in the plan
+- Apply deviation rules above when encountering issues
 
 ### Don't:
 - Add features not in the plan

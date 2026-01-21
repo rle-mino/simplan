@@ -50,7 +50,7 @@ Validate item #$ARGUMENTS by delegating to the **simplan:review** agent.
      1. Read the plan and review all changes
      2. Compare actual code state with the plan
      3. Check if all phases were properly completed
-     4. Verify commits exist for each phase
+     4. Verify commits exist for each phase (code files only - .simplan/ is gitignored)
      5. Update the plan file with completion status
      6. Update backlog status to DONE if all phases complete
      7. Generate summary of what was accomplished",

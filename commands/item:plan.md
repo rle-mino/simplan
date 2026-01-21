@@ -197,10 +197,7 @@ Display the created plan summary to the user, including a **plan recap table**:
 | 3     | 2    | <phase title> | <file count> files | `<short commit msg>` |
 ```
 
-**Ask the user** if they want to commit the plan:
-- Use **AskUserQuestion** with options like "Yes, commit now" and "No, I'll commit later"
-- If yes, create a commit with message: `plan(<slug>): <title>`
-- If no, remind them to commit when ready
+**Note**: The `.simplan/` folder is gitignored, so plan files are not committed to the repository.
 
 ---
 

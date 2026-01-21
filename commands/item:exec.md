@@ -163,12 +163,10 @@ Execute a phase for the current item by delegating to agents.
 
 12. **Commit**: If explicitly confirmed, create **one commit per phase** (even for parallel execution):
     - For each phase in the step:
-      - Stage ONLY the files for that specific phase:
-        - The plan file (e.g., `.simplan/plans/1-add-auth.md`)
-        - The code files modified during that phase (listed in the phase's "Files" section)
+      - Stage ONLY the code files modified during that phase (listed in the phase's "Files" section)
+      - Do NOT stage `.simplan/` files (they are gitignored)
       - Create commit with the phase's suggested commit message
-    - After all phase commits, stage and commit the backlog file (`.simplan/ITEMS.md`) if status changed
-    - Do NOT use `git add -A` or `git add .` - explicitly add only the files from each phase
+    - Do NOT use `git add -A` or `git add .` - explicitly add only the code files from each phase
 
 13. **Next steps**: If there are remaining phases, tell the user:
     > Step complete! To continue with the next step, run:

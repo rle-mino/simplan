@@ -5,7 +5,9 @@ allowed-tools:
 
 ## Simplan Workflow
 
-Simplan is a structured workflow for planning and executing code changes through atomic, reviewable phases.
+**Simplan is for fast engineering, not vibe coding.**
+
+This framework is designed for developers managing production code with serious quality concerns. It optimizes context usage by delegating to focused sub-agents, enforces bisect-safe commits, and keeps plans local (`.simplan/` is gitignored—these are your personal working notes, not project documentation).
 
 ### Overview
 

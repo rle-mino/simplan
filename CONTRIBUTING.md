@@ -2,6 +2,14 @@
 
 Thank you for your interest in contributing to Simplan!
 
+## Philosophy
+
+Simplan is for **fast engineering, not vibe coding**. Contributions should support developers managing production code with serious quality concerns. Keep this in mind:
+
+- **Context efficiency matters** — Sub-agents should receive minimal, focused context
+- **Plans are personal** — `.simplan/` stays gitignored; it's working notes, not project documentation
+- **Quality over convenience** — Bisect-safe commits and reviewable phases are non-negotiable
+
 ## How to Contribute
 
 ### Reporting Issues

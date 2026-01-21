@@ -2,6 +2,37 @@
 
 A structured workflow framework for Claude Code that helps you plan and execute code changes through atomic, reviewable phases.
 
+## Philosophy
+
+**Simplan is for fast engineering, not vibe coding.**
+
+This framework is designed for developers managing production code with serious quality concerns—code that will be reviewed, deployed, and maintained. It's not for throwaway prototypes or experiments where "just make it work" is acceptable.
+
+### Why Simplan exists
+
+Claude Code is powerful, but without structure it can produce sprawling changes that are hard to review, test, and debug. Simplan addresses this by:
+
+1. **Optimizing context usage** — Sub-agents handle execution and review with focused, minimal context. The executor knows only the current phase; the reviewer sees only the problem statement, not implementation details. This "fresh eyes" approach catches issues that the implementer might miss.
+
+2. **Enforcing bisect-safe commits** — Every phase must leave the codebase in a valid state (tests pass, linting clean). When bugs appear later, `git bisect` can pinpoint exactly which change introduced them.
+
+3. **Keeping plans local** — The `.simplan/` directory is automatically gitignored. Plans are your personal working notes—they track *your* thought process, not project documentation. Nobody in your organization wants to review these files. If something needs to be shared, add proper documentation to the project itself.
+
+4. **Breaking work into reviewable chunks** — Instead of one massive commit touching 20 files, you get focused phases that can be understood and reviewed in isolation.
+
+### Who this is for
+
+- Developers working on production codebases
+- Teams that do code review
+- Projects where quality and maintainability matter
+- Anyone who's been burned by "it worked when I tested it" commits
+
+### Who this is NOT for
+
+- Quick prototypes where you'll throw away the code
+- Learning projects where experimentation is the goal
+- Situations where you just need something working *right now*
+
 ## Overview
 
 Simplan transforms how you work with Claude Code by adding a structured backlog and phased execution workflow:
@@ -313,16 +344,7 @@ Simplan uses a `.simplan` directory in your project root:
 
 ## Workflow Philosophy
 
-### Why Phases?
-
-Breaking work into phases provides:
-
-1. **Reviewable chunks** - Each phase is small enough to review thoroughly
-2. **Safe checkpoints** - Every commit passes tests and linting
-3. **Bisect compatibility** - If a bug appears, git bisect can find it
-4. **Progress visibility** - Clear tracking of what's done vs remaining
-
-### Planning vs Superplanning
+### Planning vs Brainstorming
 
 Use `/item:plan` for:
 - Straightforward features with clear requirements
@@ -335,14 +357,14 @@ Use `/item:brainstorm` for:
 - Features that touch many parts of the codebase
 - Items where you're not sure how to approach the problem
 
-### Agents
+### The Two-Agent Pattern
 
-Simplan uses two specialized agents:
+Simplan uses specialized sub-agents to optimize context and catch mistakes:
 
-- **simplexecutor** - Implements a single phase following the plan precisely
-- **simpreviewer** - Reviews changes with fresh eyes, validates quality
+- **simplexecutor** — Implements a single phase following the plan precisely. It sees only the current phase, keeping context focused.
+- **simpreviewer** — Reviews changes with "fresh eyes." It receives only the problem statement and the diff, not the implementation details. This separation helps catch issues the implementer might overlook.
 
-The executor and reviewer work as a pair: execute, review, fix if needed, commit.
+The agents work as a pair: execute → review → fix if needed → commit. This mimics a real code review workflow, but faster.
 
 ## Best Practices
 

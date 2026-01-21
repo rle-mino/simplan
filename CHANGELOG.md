@@ -5,6 +5,16 @@ All notable changes to Simplan will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2026-01-21
+
+### Changed
+
+- Updated documentation to clarify simplan's philosophy: "fast engineering, not vibe coding"
+- Added explanation of context optimization via sub-agents in README, CLAUDE.md, and item:help
+- Clarified that `.simplan/` plans are personal working notes, not project documentation
+- Added "Who this is for / Who this is NOT for" section to README
+- Added Philosophy section to CONTRIBUTING.md for contributors
+
 ## [1.0.3] - 2026-01-21
 
 ### Changed

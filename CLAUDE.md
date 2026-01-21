@@ -4,7 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Simplan is a structured workflow framework for Claude Code that adds backlog management and phased execution to coding tasks. It's not a traditional software project—it's a collection of **markdown command files** and **agent definitions** that extend Claude Code's capabilities.
+Simplan is a structured workflow framework for Claude Code designed for **fast engineering, not vibe coding**. It's built for developers managing production code with serious quality concerns.
+
+**Core principles:**
+- **Optimized context** — Sub-agents handle execution and review with focused, minimal context
+- **Bisect-safe commits** — Every phase leaves the codebase in a valid state
+- **Plans stay local** — `.simplan/` is gitignored; plans are personal working notes, not project documentation
+- **Reviewable chunks** — Work is broken into focused phases that can be understood in isolation
+
+This is not a traditional software project—it's a collection of **markdown command files** and **agent definitions** that extend Claude Code's capabilities.
 
 ## Architecture
 

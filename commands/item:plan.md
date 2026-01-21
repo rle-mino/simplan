@@ -118,6 +118,16 @@ For each phase, specify:
 - A suggested commit message
 - Any bisect considerations (e.g., "must include X to avoid broken imports")
 - **Step number** for parallel execution grouping
+- **Complexity score** (1-5): Estimate effort/risk for the phase
+
+**Complexity scoring guide:**
+| Score | Meaning | Examples |
+|-------|---------|----------|
+| 1 | Trivial | Config change, add import, rename |
+| 2 | Simple | Add function, update UI text, fix typo in logic |
+| 3 | Moderate | New component, API endpoint, test suite |
+| 4 | Complex | Multi-file refactor, new integration, schema change |
+| 5 | High-risk | Architecture change, security-critical, performance-sensitive |
 
 ### Step 4: Write the Plan File
 
@@ -145,6 +155,7 @@ Write the plan to `.simplan/plans/<number>-<slug>.md` using this format:
 
 ### Phase 1: <title>
 - **Step**: 1
+- **Complexity**: 2
 - [ ] <task>
 - [ ] <task>
 - **Files**: <list of files>
@@ -153,6 +164,7 @@ Write the plan to `.simplan/plans/<number>-<slug>.md` using this format:
 
 ### Phase 2: <title>
 - **Step**: 1
+- **Complexity**: 3
 - [ ] <task>
 - [ ] <task>
 - **Files**: <list of files>
@@ -161,6 +173,7 @@ Write the plan to `.simplan/plans/<number>-<slug>.md` using this format:
 
 ### Phase 3: <title>
 - **Step**: 2
+- **Complexity**: 2
 - [ ] <task>
 - [ ] <task>
 - **Files**: <list of files>
@@ -190,12 +203,19 @@ Display the created plan summary to the user, including a **plan recap table**:
 ```markdown
 ## Plan Recap
 
-| Phase | Step | Title | Files | Commit |
-|-------|------|-------|-------|--------|
-| 1     | 1    | <phase title> | <file count> files | `<short commit msg>` |
-| 2     | 1    | <phase title> | <file count> files | `<short commit msg>` |
-| 3     | 2    | <phase title> | <file count> files | `<short commit msg>` |
+| Phase | Step | Cx | Title | Files | Commit |
+|-------|------|----|-------|-------|--------|
+| 1     | 1    | 2  | <phase title> | <file count> files | `<short commit msg>` |
+| 2     | 1    | 3  | <phase title> | <file count> files | `<short commit msg>` |
+| 3     | 2    | 2  | <phase title> | <file count> files | `<short commit msg>` |
+
+**Total complexity: 7** (sum of all phases)
 ```
+
+**Complexity guidance:**
+- Total 1-5: Quick task, should be done in one session
+- Total 6-12: Medium task, may span multiple sessions
+- Total 13+: Large task, consider breaking into multiple items
 
 **Note**: The `.simplan/` folder is gitignored, so plan files are not committed to the repository.
 

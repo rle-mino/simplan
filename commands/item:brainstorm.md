@@ -254,7 +254,17 @@ For each phase, specify:
 - A suggested commit message
 - Bisect considerations
 - **Step number** for parallel execution grouping
+- **Complexity score** (1-5): Estimate effort/risk
 - **Relevant Q&A**: Which questions/answers informed this phase
+
+**Complexity scoring guide:**
+| Score | Meaning | Examples |
+|-------|---------|----------|
+| 1 | Trivial | Config change, add import, rename |
+| 2 | Simple | Add function, update UI text, fix typo in logic |
+| 3 | Moderate | New component, API endpoint, test suite |
+| 4 | Complex | Multi-file refactor, new integration, schema change |
+| 5 | High-risk | Architecture change, security-critical, performance-sensitive |
 
 ### Step 6: Write the Plan File
 
@@ -336,6 +346,7 @@ Use this format:
 
 ### Phase 1: <title>
 - **Step**: 1
+- **Complexity**: 3
 - [ ] <task>
 - [ ] <task>
 - **Files**: <list of files>
@@ -345,6 +356,7 @@ Use this format:
 
 ### Phase 2: <title>
 - **Step**: 1
+- **Complexity**: 4
 ...
 
 ## Current Status
@@ -381,11 +393,13 @@ Display:
 ```markdown
 ## Plan Recap
 
-| Phase | Step | Title | Files | Commit |
-|-------|------|-------|-------|--------|
-| 1     | 1    | <phase title> | <file count> files | `<short commit msg>` |
-| 2     | 1    | <phase title> | <file count> files | `<short commit msg>` |
-| 3     | 2    | <phase title> | <file count> files | `<short commit msg>` |
+| Phase | Step | Cx | Title | Files | Commit |
+|-------|------|----|-------|-------|--------|
+| 1     | 1    | 3  | <phase title> | <file count> files | `<short commit msg>` |
+| 2     | 1    | 4  | <phase title> | <file count> files | `<short commit msg>` |
+| 3     | 2    | 3  | <phase title> | <file count> files | `<short commit msg>` |
+
+**Total complexity: 10** (sum of all phases)
 ```
 
 **Note**: The `.simplan/` folder is gitignored, so plan files are not committed to the repository.

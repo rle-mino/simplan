@@ -57,8 +57,33 @@ Add a new item to the backlog. Keep this lightweight - no agent delegation neede
 
 5. **Confirm**: Show the added item with its number and slug
 
-6. **Next steps**: Tell the user:
-   > Item #<number> added! When you're ready to plan it, run:
-   > - `/clear`
-   > - `/item:plan <number>`
-   > Or see all pending items with `/item:progress`
+6. **Assess complexity**: Based on the description, estimate complexity:
+
+   **Simple** (suggest `/item:plan`):
+   - Bug fixes with clear reproduction steps
+   - Single-file changes
+   - Well-defined, narrow scope
+   - "Add X to Y" style tasks
+
+   **Complex** (suggest `/item:brainstorm`):
+   - New features touching multiple systems
+   - Architectural decisions needed
+   - Unclear requirements or multiple approaches
+   - Integration with external services/APIs
+   - Security-sensitive changes
+   - Performance optimization without clear target
+
+7. **Next steps**: Based on complexity assessment, recommend:
+
+   **For simple items:**
+   > Item #<number> added! This looks straightforward. When ready:
+   > ```
+   > /item:plan <number>
+   > ```
+
+   **For complex items:**
+   > Item #<number> added! This seems complex—I'd recommend brainstorming first:
+   > ```
+   > /item:brainstorm <number>
+   > ```
+   > Or if you already know the approach: `/item:plan <number>`

@@ -440,6 +440,8 @@ After creating/updating the plan, tell the user:
 >
 > To start executing, run:
 > `/item:exec`
+>
+> 💡 Tip: Run `/clear` to reset context before executing.
 
 **For updated plans:**
 > Item #<number> plan has been revised with <N> additional questions!
@@ -450,3 +452,5 @@ After creating/updating the plan, tell the user:
 >
 > To continue executing, run:
 > `/item:exec`
+>
+> 💡 Tip: Run `/clear` to reset context before executing.

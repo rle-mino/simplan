@@ -201,3 +201,5 @@ If there are remaining phases, tell the user:
 >
 > To continue with the next step, run:
 > `/item:exec`
+>
+> 💡 Tip: Run `/clear` to reset context before the next step.

@@ -164,3 +164,5 @@ Each item in `ITEMS.md` includes:
 > `/item:progress`
 >
 > Or add a new item with `/item:add`
+>
+> 💡 Tip: Run `/clear` to reset context before starting work.

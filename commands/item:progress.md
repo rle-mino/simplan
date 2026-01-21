@@ -89,12 +89,14 @@ If no items exist, say "No items."
    - This seems complex → `/item:brainstorm 5`
    ```
 
-7. **Quick commands summary**:
-   Always end with:
-   ```
-   Quick commands:
-   - `/item:exec` - continue/start next item
-   - `/item:exec <num>` - work on specific item
-   - `/item:plan <num>` - plan a backlog item
-   - `/item:add` - add new item
-   ```
+---
+
+## Next Steps
+
+Always end with:
+
+> **Quick commands:**
+> - `/item:exec` — continue/start next item
+> - `/item:exec <num>` — work on specific item
+> - `/item:plan <num>` — plan a backlog item
+> - `/item:add` — add new item

@@ -61,14 +61,20 @@ Validate item #$ARGUMENTS by delegating to the **simplan:review** agent.
 
 5. **Show result**: Display the validation summary to the user
 
-6. **Next steps**: Based on validation result, tell the user:
-   - If item is marked DONE:
-     > Item #<number> complete! To see remaining work, run:
-     > ```
-     > /item:progress
-     > ```
-   - If issues were found:
-     > Validation found issues. Fix them and re-run:
-     > ```
-     > /item:exec <phase-number>
-     > ```
+---
+
+## Next Steps
+
+Based on validation result, tell the user:
+
+**If item is marked DONE:**
+> Item #<number> complete!
+>
+> To see remaining work, run:
+> `/item:progress`
+
+**If issues were found:**
+> Validation found issues that need to be fixed.
+>
+> To fix and re-run, run:
+> `/item:exec <phase-number>`

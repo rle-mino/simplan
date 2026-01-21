@@ -73,17 +73,22 @@ Add a new item to the backlog. Keep this lightweight - no agent delegation neede
    - Security-sensitive changes
    - Performance optimization without clear target
 
-7. **Next steps**: Based on complexity assessment, recommend:
+---
 
-   **For simple items:**
-   > Item #<number> added! This looks straightforward. When ready:
-   > ```
-   > /item:plan <number>
-   > ```
+## Next Steps
 
-   **For complex items:**
-   > Item #<number> added! This seems complex—I'd recommend brainstorming first:
-   > ```
-   > /item:brainstorm <number>
-   > ```
-   > Or if you already know the approach: `/item:plan <number>`
+Based on complexity assessment, recommend:
+
+**For simple items:**
+> Item #<number> added! This looks straightforward.
+>
+> To plan this item, run:
+> `/item:plan <number>`
+
+**For complex items:**
+> Item #<number> added! This seems complex—I'd recommend brainstorming first.
+>
+> To brainstorm this item, run:
+> `/item:brainstorm <number>`
+>
+> Or if you already know the approach: `/item:plan <number>`

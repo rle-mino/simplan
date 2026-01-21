@@ -191,7 +191,13 @@ Execute a phase for the current item by delegating to agents.
       - Create commit with the phase's suggested commit message
     - Do NOT use `git add -A` or `git add .` - explicitly add only the code files from each phase
 
-13. **Next steps**: If there are remaining phases, tell the user:
-    > Step complete! To continue with the next step, run:
-    > - `/clear`
-    > - `/item:exec [--model=opus|sonnet|haiku]`
+---
+
+## Next Steps
+
+If there are remaining phases, tell the user:
+
+> Step complete!
+>
+> To continue with the next step, run:
+> `/item:exec`

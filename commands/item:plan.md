@@ -235,7 +235,9 @@ Display the created plan summary to the user, including a **plan recap table**:
 
 ## Next Steps
 
-After creating the plan (and optionally committing), tell the user:
-> Item #<number> is now PLANNED with <N> phases! To start executing, run:
-> - `/clear`
-> - `/item:exec [--model=opus|sonnet|haiku]`
+After creating the plan, tell the user:
+
+> Item #<number> is now PLANNED with <N> phases!
+>
+> To start executing, run:
+> `/item:exec`

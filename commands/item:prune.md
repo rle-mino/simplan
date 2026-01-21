@@ -42,7 +42,13 @@ Purge all completed items from the backlog. Keep this lightweight - no agent del
 
 10. **Show result**: Display summary of purged items and the updated backlog
 
-11. **Next steps**: Tell the user:
-    > Purged <count> completed item(s)! To see your updated backlog, run:
-    > - `/clear`
-    > - `/item:progress`
+---
+
+## Next Steps
+
+Tell the user:
+
+> Purged <count> completed item(s)!
+>
+> To see your updated backlog, run:
+> `/item:progress`

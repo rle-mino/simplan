@@ -431,24 +431,22 @@ Display:
 
 ## Next Steps
 
-After creating/updating the plan (and optionally committing), tell the user:
+After creating/updating the plan, tell the user:
 
 **For new plans:**
 > Item #<number> has been thoroughly brainstormed with <N> questions and planned with <M> phases!
 >
-> The comprehensive plan is at: `.simplan/plans/<number>-<slug>.md`
+> Plan: `.simplan/plans/<number>-<slug>.md`
 >
 > To start executing, run:
-> - `/clear`
-> - `/item:exec [--model=opus|sonnet|haiku]`
+> `/item:exec`
 
 **For updated plans:**
 > Item #<number> plan has been revised with <N> additional questions!
 >
 > Changes: <brief summary of what changed - new phases, revised phases, etc.>
 >
-> The updated plan is at: `.simplan/plans/<number>-<slug>.md`
+> Plan: `.simplan/plans/<number>-<slug>.md`
 >
 > To continue executing, run:
-> - `/clear`
-> - `/item:exec [--model=opus|sonnet|haiku]`
+> `/item:exec`

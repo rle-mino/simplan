@@ -85,3 +85,14 @@ Provide a summary:
 - Framework version: X.X.X → Y.Y.Y (or "already up-to-date")
 - .simplan/ initialized (if created)
 - Any deprecated files that were cleaned up (reported by installer)
+
+---
+
+## Next Steps
+
+Tell the user:
+
+> Simplan updated to <version>!
+>
+> To load the new commands, restart Claude Code:
+> `/exit` then reopen

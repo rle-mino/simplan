@@ -156,10 +156,11 @@ Each item in `ITEMS.md` includes:
 
 ---
 
-### Getting Started
+---
+
+## Next Steps
 
 > To see your current backlog, run:
-> - `/clear`
-> - `/item:progress`
+> `/item:progress`
 >
 > Or add a new item with `/item:add`

@@ -40,7 +40,13 @@ Delete an item from the backlog. Keep this lightweight - no agent delegation nee
 
 10. **Show result**: Display the updated backlog
 
-11. **Next steps**: Tell the user:
-    > Item deleted! To see your updated backlog, run:
-    > - `/clear`
-    > - `/item:progress`
+---
+
+## Next Steps
+
+Tell the user:
+
+> Item deleted!
+>
+> To see your updated backlog, run:
+> `/item:progress`

@@ -73,7 +73,7 @@ Based on validation result, tell the user:
 > To see remaining work, run:
 > `/item:progress`
 >
-> Tip: Run `/clear` to reset context before starting new work.
+> Tip: Run `{{CLEAR_COMMAND}}` to reset context before starting new work.
 
 **If issues were found:**
 > Validation found issues that need to be fixed.
@@ -81,4 +81,4 @@ Based on validation result, tell the user:
 > To fix and re-run, run:
 > `/item:exec <phase-number>`
 >
-> Tip: Run `/clear` to reset context before fixing.
+> Tip: Run `{{CLEAR_COMMAND}}` to reset context before fixing.

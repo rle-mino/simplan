@@ -51,4 +51,4 @@ Tell the user:
 > To see your updated backlog, run:
 > `/item:progress`
 >
-> Tip: Run `/clear` to reset context before continuing.
+> Tip: Run `{{CLEAR_COMMAND}}` to reset context before continuing.

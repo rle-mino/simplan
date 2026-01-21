@@ -68,6 +68,9 @@ process_command_claude() {
     # Replace exit command
     content=$(echo "$content" | sed 's/{{EXIT_COMMAND}}/\/exit/g')
     
+    # Replace clear command
+    content=$(echo "$content" | sed 's/{{CLEAR_COMMAND}}/\/clear/g')
+    
     echo "$content" > "$dest_file"
 }
 
@@ -98,6 +101,9 @@ process_command_opencode() {
     
     # Replace exit command
     content=$(echo "$content" | sed 's/{{EXIT_COMMAND}}/quit/g')
+    
+    # Replace clear command
+    content=$(echo "$content" | sed 's/{{CLEAR_COMMAND}}/\/new/g')
     
     # Convert frontmatter format
     # allowed-tools -> tools (OpenCode format)

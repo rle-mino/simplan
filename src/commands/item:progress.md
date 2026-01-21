@@ -101,4 +101,4 @@ Always end with:
 > - `/item:plan <num>` — plan a backlog item
 > - `/item:add` — add new item
 >
-> Tip: Run `/clear` to reset context before starting work.
+> Tip: Run `{{CLEAR_COMMAND}}` to reset context before starting work.

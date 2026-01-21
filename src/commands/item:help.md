@@ -165,4 +165,4 @@ Each item in `ITEMS.md` includes:
 >
 > Or add a new item with `/item:add`
 >
-> Tip: Run `/clear` to reset context before starting work.
+> Tip: Run `{{CLEAR_COMMAND}}` to reset context before starting work.

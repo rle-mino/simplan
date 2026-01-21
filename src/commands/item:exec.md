@@ -202,4 +202,4 @@ If there are remaining phases, tell the user:
 > To continue with the next step, run:
 > `/item:exec`
 >
-> Tip: Run `/clear` to reset context before the next step.
+> Tip: Run `{{CLEAR_COMMAND}}` to reset context before the next step.

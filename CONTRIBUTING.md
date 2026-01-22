@@ -23,10 +23,25 @@ Simplan is for **fast engineering, not vibe coding**. Contributions should suppo
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/my-feature`)
 3. Make your changes
-4. Test thoroughly with Claude Code
+4. Test locally using dev mode (see below)
 5. Commit with clear messages
 6. Push to your fork
 7. Open a Pull Request
+
+### Testing Local Changes
+
+Use the `--dev` flag to test your changes without publishing:
+
+```bash
+# From the simplan repository directory
+./install.sh --dev --claude    # Test with Claude Code
+./install.sh --dev --opencode  # Test with OpenCode
+```
+
+This installs from your local source instead of cloning from GitHub, allowing you to:
+- Test command changes immediately
+- Verify agent behavior
+- Debug issues before publishing
 
 ### Code Style
 

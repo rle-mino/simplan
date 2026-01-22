@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-01-22
+
+### Added
+
+- `--dev` flag for `install.sh` to test local changes before publishing
+  - Uses local source directory instead of cloning from GitHub
+  - Useful for development and testing workflows
+- Updated CONTRIBUTING.md with instructions for testing local changes
+
+### Changed
+
+- Removed model selection from commands and agents
+  - Agents now use the session's default model instead of hardcoded values
+  - Removed `--model` argument from `/item:exec` command
+  - Simplified build system by removing model transformation logic
+- OpenCode: Use `/new` instead of `/clear` for context reset (platform-appropriate command)
+
+### Fixed
+
+- OpenCode: Corrected clear command placeholder to use `/new` instead of `/clear`
+
 ## [1.3.1] - 2026-01-22
 
 ### Fixed

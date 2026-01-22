@@ -65,10 +65,15 @@ If a validation cannot be fixed after 3 attempts, note it as a blocker for the r
 
 ### Step 4: Update the Plan
 
-After completing the tasks and validations, update the plan file:
+After completing the tasks and validations, update the plan file with **implementation details only**:
 - Mark completed tasks with `[x]`
-- Add implementation notes (including validation results)
+- Add `**Implementation notes**:` section with what was actually done
+- Add `**Validation results**:` section with completion condition results (if any)
 - Note any deviations from the plan (and why)
+
+**Do NOT update:**
+- Phase status emojis (⬜/🔄/✅) - the orchestrating command handles this
+- The `## Current Status` section - the orchestrating command handles this
 
 ## Deviation Rules
 
@@ -124,15 +129,19 @@ When running in parallel with other phases (you'll see "IMPORTANT: Other phases 
 
 ## Plan Update Format
 
-After executing, update the phase in the plan file:
+After executing, add implementation details to the phase in the plan file.
 
-**Phase status emoji:**
-- ⬜ Not started
-- 🔄 In progress
-- ✅ Completed
+**You update:**
+- Task checkboxes: `[ ]` → `[x]`
+- Implementation notes
+- Validation results
+
+**You do NOT update:**
+- Phase status emojis (leave as-is)
+- Current Status section
 
 ```markdown
-### 🔄 Phase 1: <title>
+### ⬜ Phase 1: <title>
 - [x] <task 1>
 - [x] <task 2>
 - **Files**: <list of files>
@@ -140,12 +149,7 @@ After executing, update the phase in the plan file:
 - **Validation results**: <results of completion condition checks, if any>
 ```
 
-Also update the Current Status section:
-```markdown
-## Current Status
-- **Current Phase**: Phase 1 (in progress) or Phase 2 (next)
-- **Progress**: 1/<total phases>
-```
+Note: The phase emoji stays unchanged (⬜ or 🔄). The orchestrating command will update it to ✅ after review approval.
 
 ## Important
 

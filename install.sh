@@ -12,6 +12,7 @@ NC='\033[0m' # No Color
 REPO_URL="https://github.com/rle-mino/simplan.git"
 INSTALL_MODE="local"
 PLATFORM=""  # Will be auto-detected or specified
+DEV_MODE=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -28,6 +29,10 @@ while [[ $# -gt 0 ]]; do
             PLATFORM="opencode"
             shift
             ;;
+        --dev|-d)
+            DEV_MODE=true
+            shift
+            ;;
         --help|-h)
             echo "Usage: curl -fsSL .../install.sh | bash -s -- [OPTIONS]"
             echo ""
@@ -37,6 +42,7 @@ while [[ $# -gt 0 ]]; do
             echo "  --global, -g    Install globally (XDG compliant: ~/.config/simplan-source)"
             echo "  --claude        Install for Claude Code (default if .claude/ exists)"
             echo "  --opencode      Install for OpenCode (default if .opencode/ exists)"
+            echo "  --dev, -d       Use local source directory instead of cloning from GitHub"
             echo "  --help, -h      Show this help message"
             echo ""
             echo "Platform is auto-detected if not specified:"
@@ -45,6 +51,10 @@ while [[ $# -gt 0 ]]; do
             echo "  - Otherwise prompts for selection"
             echo ""
             echo "By default, installs locally to .claude/ or .opencode/ in the current directory."
+            echo ""
+            echo "Development mode (--dev):"
+            echo "  Use this when testing local changes before publishing."
+            echo "  Run from the simplan repository directory."
             exit 0
             ;;
         *)
@@ -103,17 +113,32 @@ detect_platform() {
     fi
 }
 
-# Create temp directory and clone
-TEMP_DIR=$(mktemp -d)
-trap "rm -rf $TEMP_DIR" EXIT
+# Determine source directory
+if [[ "$DEV_MODE" == true ]]; then
+    # Dev mode: use local directory
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    SOURCE_DIR="$SCRIPT_DIR"
+    
+    # Verify we're in a simplan repo
+    if [[ ! -f "$SOURCE_DIR/VERSION" ]] || [[ ! -d "$SOURCE_DIR/src" ]]; then
+        echo -e "${RED}Error: --dev must be run from the simplan repository directory${NC}"
+        echo "Expected to find VERSION file and src/ directory"
+        exit 1
+    fi
+    
+    echo -e "${YELLOW}Using local source directory (dev mode)${NC}"
+    NEW_VERSION=$(cat "$SOURCE_DIR/VERSION" 2>/dev/null || echo "dev")
+else
+    # Normal mode: clone from GitHub
+    TEMP_DIR=$(mktemp -d)
+    trap "rm -rf $TEMP_DIR" EXIT
 
-echo -e "${YELLOW}Cloning simplan...${NC}"
-git clone --quiet "$REPO_URL" "$TEMP_DIR/simplan"
+    echo -e "${YELLOW}Cloning simplan...${NC}"
+    git clone --quiet "$REPO_URL" "$TEMP_DIR/simplan"
 
-SOURCE_DIR="$TEMP_DIR/simplan"
-
-# Read version from cloned repo
-NEW_VERSION=$(cat "$SOURCE_DIR/VERSION" 2>/dev/null || echo "unknown")
+    SOURCE_DIR="$TEMP_DIR/simplan"
+    NEW_VERSION=$(cat "$SOURCE_DIR/VERSION" 2>/dev/null || echo "unknown")
+fi
 
 # Run the build to generate platform-specific files (if src/ exists)
 if [[ -d "$SOURCE_DIR/src" ]]; then

@@ -1,6 +1,6 @@
 ---
 description: Execute a phase of an item
-argument-hint: [item-number] [--model=opus|sonnet|haiku]
+argument-hint: [item-number]
 allowed-tools:
   - Read
   - Write
@@ -31,11 +31,10 @@ Execute a phase for the current item by delegating to agents.
 ### Arguments
 - `$ARGUMENTS` may contain:
   - Item number (optional - auto-selects if not provided)
-  - `--model=<model>` or `-m <model>`: opus (default), sonnet, haiku
 
 ### Steps
 
-1. **Parse arguments**: Extract item number (optional) and model (default: opus) from `$ARGUMENTS`
+1. **Parse arguments**: Extract item number (optional) from `$ARGUMENTS`
 
 2. **Select item**:
    - If item number provided: use that item (must be `PLANNED` or `IDLE`)
@@ -95,7 +94,6 @@ Execute a phase for the current item by delegating to agents.
      3. Update the plan with implementation notes
      4. Mark tasks as complete",
      subagent_type="{{AGENT:exec}}",
-     model=<specified model>,
      description="Execute Phase <N> of item #<X>"
    )
    ```
@@ -129,7 +127,6 @@ Execute a phase for the current item by delegating to agents.
       3. Update the plan with implementation notes
       4. Mark tasks as complete",
       subagent_type="{{AGENT:exec}}",
-      model=<specified model>,
       description="Execute Phase <N> of item #<X>"
     )
     ```

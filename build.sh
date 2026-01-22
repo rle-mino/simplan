@@ -35,10 +35,6 @@ process_command_claude() {
     content=$(echo "$content" | sed 's/{{PLATFORM_CONFIG_DIR}}/.claude/g')
     content=$(echo "$content" | sed 's/{{PLATFORM_NAME}}/Claude Code/g')
     
-    # Replace model references (Claude uses short names)
-    content=$(echo "$content" | sed 's/{{MODEL:opus}}/opus/g')
-    content=$(echo "$content" | sed 's/{{MODEL:sonnet}}/sonnet/g')
-    content=$(echo "$content" | sed 's/{{MODEL:haiku}}/haiku/g')
     
     # Replace agent references (Claude uses colons)
     content=$(echo "$content" | sed 's/{{AGENT:exec}}/simplan:exec/g')
@@ -65,10 +61,6 @@ process_agent_claude() {
     content=$(echo "$content" | sed 's/{{PLATFORM_CONFIG_DIR}}/.claude/g')
     content=$(echo "$content" | sed 's/{{PLATFORM_NAME}}/Claude Code/g')
     
-    # Replace model references
-    content=$(echo "$content" | sed 's/{{MODEL:opus}}/opus/g')
-    content=$(echo "$content" | sed 's/{{MODEL:sonnet}}/sonnet/g')
-    content=$(echo "$content" | sed 's/{{MODEL:haiku}}/haiku/g')
     
     # Replace agent references
     content=$(echo "$content" | sed 's/{{AGENT:exec}}/simplan:exec/g')
@@ -155,10 +147,6 @@ process_command_opencode() {
     content=$(echo "$content" | sed 's/{{PLATFORM_CONFIG_DIR}}/.opencode/g')
     content=$(echo "$content" | sed 's/{{PLATFORM_NAME}}/OpenCode/g')
     
-    # Replace model references with OpenCode format (latest models)
-    content=$(echo "$content" | sed 's/{{MODEL:opus}}/anthropic\/claude-opus-4-5-20250929/g')
-    content=$(echo "$content" | sed 's/{{MODEL:sonnet}}/anthropic\/claude-sonnet-4-5-20250929/g')
-    content=$(echo "$content" | sed 's/{{MODEL:haiku}}/anthropic\/claude-haiku-4-5-20250929/g')
     
     # Replace agent references (OpenCode uses hyphens)
     content=$(echo "$content" | sed 's/{{AGENT:exec}}/simplan-exec/g')
@@ -224,10 +212,6 @@ process_agent_opencode() {
     content=$(echo "$content" | sed 's/{{PLATFORM_CONFIG_DIR}}/.opencode/g')
     content=$(echo "$content" | sed 's/{{PLATFORM_NAME}}/OpenCode/g')
     
-    # Replace model references with OpenCode format (latest models)
-    content=$(echo "$content" | sed 's/{{MODEL:opus}}/anthropic\/claude-opus-4-5-20250929/g')
-    content=$(echo "$content" | sed 's/{{MODEL:sonnet}}/anthropic\/claude-sonnet-4-5-20250929/g')
-    content=$(echo "$content" | sed 's/{{MODEL:haiku}}/anthropic\/claude-haiku-4-5-20250929/g')
     
     # Replace agent references (OpenCode uses hyphens)
     content=$(echo "$content" | sed 's/{{AGENT:exec}}/simplan-exec/g')
@@ -245,7 +229,6 @@ process_agent_opencode() {
     # Transform agent frontmatter for OpenCode
     # - name: removed (filename is the name)
     # - description: kept
-    # - model: kept (already transformed)
     # - temperature: kept (already transformed)
     # - hidden: kept (already transformed)
     # - tools: list -> object with true values
@@ -260,7 +243,6 @@ process_agent_opencode() {
     local tools_list=()
     local transformed=""
     local description=""
-    local model=""
     local temperature=""
     local hidden=""
     local permission_content=""
@@ -281,8 +263,6 @@ process_agent_opencode() {
                 continue
             elif [[ "$line" =~ ^description:\ (.+)$ ]]; then
                 description="${BASH_REMATCH[1]}"
-            elif [[ "$line" =~ ^model:\ (.+)$ ]]; then
-                model="${BASH_REMATCH[1]}"
             elif [[ "$line" =~ ^temperature:\ (.+)$ ]]; then
                 temperature="${BASH_REMATCH[1]}"
             elif [[ "$line" =~ ^hidden:\ (.+)$ ]]; then
@@ -322,7 +302,6 @@ process_agent_opencode() {
     transformed="---"$'\n'
     transformed+="description: $description"$'\n'
     transformed+="mode: subagent"$'\n'
-    transformed+="model: $model"$'\n'
     
     if [[ -n "$temperature" ]]; then
         transformed+="temperature: $temperature"$'\n'

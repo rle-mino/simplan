@@ -48,9 +48,7 @@ The project uses a template system to support multiple platforms:
 1. **Source templates** (`src/`) use placeholders like:
    - `{{PLATFORM_CONFIG_DIR}}` → `.claude` or `.opencode`
    - `{{PLATFORM_NAME}}` → `Claude Code` or `OpenCode`
-   - `{{MODEL:opus}}` → `opus` (Claude) or `anthropic/claude-opus-4-5-20250929` (OpenCode)
-   - `{{MODEL:sonnet}}` → `sonnet` (Claude) or `anthropic/claude-sonnet-4-5-20250929` (OpenCode)
-   - `{{MODEL:haiku}}` → `haiku` (Claude) or `anthropic/claude-haiku-4-5-20250929` (OpenCode)
+
    - `{{AGENT:exec}}` → `simplan:exec` (Claude) or `simplan-exec` (OpenCode)
    - `{{EXIT_COMMAND}}` → `/exit` (Claude) or `quit` (OpenCode)
    - `{{TEMPERATURE:low}}` → removed (Claude) or `0.1` (OpenCode)
@@ -68,7 +66,7 @@ The project uses a template system to support multiple platforms:
 | Config dir | `.claude/` | `.opencode/` |
 | Command names | `item:add` | `item-add` |
 | Agent names | `simplan:exec` | `simplan-exec` |
-| Model format | `opus`, `sonnet`, `haiku` | `anthropic/claude-opus-4-5-20250929` |
+| Model | Not specified (uses session default) | Not specified (uses session default) |
 | Tools (commands) | `allowed-tools:` (YAML list) | Removed (uses agent permissions) |
 | Tools (agents) | `tools: Read, Write, ...` | `tools:` object with `tool: true` |
 | Agent mode | Not explicit | `mode: subagent` |
@@ -79,7 +77,7 @@ The project uses a template system to support multiple platforms:
 ### Key Concepts
 
 - **Commands** (`src/commands/*.md`): Define skills invoked via `/item:*` (Claude) or `/item-*` (OpenCode). Each has YAML frontmatter specifying `description`, `argument-hint`, and `allowed-tools`.
-- **Agents** (`src/agents/*.md`): Specialized prompts for delegation via the Task tool. Frontmatter defines `name`, `description`, `tools`, `model`, `temperature`, `hidden`, `permission`, and `color`.
+- **Agents** (`src/agents/*.md`): Specialized prompts for delegation via the Task tool. Frontmatter defines `name`, `description`, `tools`, `temperature`, `hidden`, `permission`, and `color`.
 - **ITEMS.md**: User's backlog file at `.simplan/ITEMS.md` tracking work items and statuses.
 - **Plans**: Markdown files at `.simplan/plans/<number>-<slug>.md` with phased execution details.
 
@@ -162,7 +160,7 @@ allowed-tools:
 @.simplan/ITEMS.md
 
 ## Task
-Instructions using {{AGENT:exec}} and {{MODEL:opus}} placeholders...
+Instructions using {{AGENT:exec}} placeholders...
 ```
 
 ### Agent Template
@@ -171,7 +169,6 @@ Instructions using {{AGENT:exec}} and {{MODEL:opus}} placeholders...
 ---
 name: simplan:exec
 description: What this agent does
-model: {{MODEL:opus}}
 temperature: {{TEMPERATURE:balanced}}
 hidden: {{HIDDEN:true}}
 tools:
@@ -190,7 +187,6 @@ You are the **{{AGENT:exec}}** agent...
 ```
 
 **Placeholders:**
-- `{{MODEL:opus|sonnet|haiku}}` - Model tier
 - `{{TEMPERATURE:low|balanced|high}}` - Temperature (0.1, 0.3, 0.7)
 - `{{HIDDEN:true|false}}` - Hide from autocomplete (OpenCode only)
 - `{{AGENT:exec|review}}` - Agent name with platform-appropriate separator

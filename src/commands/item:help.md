@@ -80,9 +80,6 @@ Executes a single phase from the plan:
 - If item number provided: uses that item
 - If no number: continues `IN_PROGRESS` item, or picks first `PLANNED`/`IDLE`
 
-**Options**:
-- `--model=opus|sonnet|haiku` to choose execution model
-
 **When to use**: After planning, execute phases one by one. Review each before moving to the next.
 
 ---

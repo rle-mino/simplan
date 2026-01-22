@@ -1,7 +1,6 @@
 ---
 name: simplan:review
 description: Review agent that validates code changes against the plan, checks quality and alignment, and can invoke {{AGENT:exec}} to fix issues. Use after phase execution to validate before committing.
-model: {{MODEL:opus}}
 temperature: {{TEMPERATURE:low}}
 hidden: {{HIDDEN:true}}
 tools:

@@ -231,8 +231,6 @@ Executes the next incomplete phase of an item. Uses two specialized agents:
 5. Commits the phase with the planned commit message
 6. Updates phase checkboxes and progress
 
-Supports `--model=opus|sonnet|haiku` to specify which model to use.
-
 ### `/item:review` / `/item-review`
 
 Reviews that all phases of an item are complete and marks it as `DONE`.
@@ -422,7 +420,6 @@ simplan/
 
 - `{{PLATFORM_CONFIG_DIR}}` → `.claude` or `.opencode`
 - `{{PLATFORM_NAME}}` → `Claude Code` or `OpenCode`
-- `{{MODEL:opus}}` → `opus` or `anthropic/claude-sonnet-4-20250514`
 - `{{AGENT:exec}}` → `simplan:exec` or `simplan-exec`
 - `{{EXIT_COMMAND}}` → `/exit` or `quit`
 

@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-01-22
+
+### Added
+
+- Completion conditions for self-validation during phase execution
+  - Define validation commands and expected outcomes during planning
+  - Executor runs checks after implementation and iterates until they pass
+  - Reviewer verifies all conditions before approval
+- Emoji indicators for phase completion states in plans (visual progress tracking)
+
+### Changed
+
+- Clarified responsibility for plan status updates between agents
+  - Exec agent: only adds implementation details (notes, validation results)
+  - Review agent: only adds review information (approval status, comments)
+  - Exec command: handles all phase status emoji updates and Current Status section
+
 ## [1.4.0] - 2026-01-22
 
 ### Added

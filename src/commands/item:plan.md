@@ -193,7 +193,7 @@ Write the plan to `.simplan/plans/<number>-<slug>.md` using this format:
 
 ## Phases
 
-### Phase 1: <title>
+### ⬜ Phase 1: <title>
 - **Step**: 1
 - **Complexity**: 2
 - [ ] <task>
@@ -202,7 +202,7 @@ Write the plan to `.simplan/plans/<number>-<slug>.md` using this format:
 - **Commit message**: `<message>`
 - **Bisect note**: <why this phase is self-contained, or "N/A" if obvious>
 
-### Phase 2: <title>
+### ⬜ Phase 2: <title>
 - **Step**: 1
 - **Complexity**: 3
 - [ ] <task>
@@ -211,7 +211,7 @@ Write the plan to `.simplan/plans/<number>-<slug>.md` using this format:
 - **Commit message**: `<message>`
 - **Bisect note**: <why this phase is self-contained, or "N/A" if obvious>
 
-### Phase 3: <title>
+### ⬜ Phase 3: <title>
 - **Step**: 2
 - **Complexity**: 2
 - [ ] <task>
@@ -219,6 +219,14 @@ Write the plan to `.simplan/plans/<number>-<slug>.md` using this format:
 - **Files**: <list of files>
 - **Commit message**: `<message>`
 - **Bisect note**: <why this phase is self-contained, or "N/A" if obvious>
+
+## Phase Status Legend
+
+| Emoji | Status |
+|-------|--------|
+| ⬜ | Not started |
+| 🔄 | In progress |
+| ✅ | Completed |
 
 ## Current Status
 - **Current Phase**: Not started

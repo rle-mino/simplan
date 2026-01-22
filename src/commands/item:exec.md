@@ -61,7 +61,7 @@ Execute a phase for the current item by delegating to agents.
 6. **Determine next step**:
    - Parse the "Execution Steps" table from the plan (if present)
    - If no step table exists, treat each phase as its own step (backward compatibility)
-   - Find the lowest step number that has incomplete phases (phases without ✅)
+   - Find the lowest step number that has incomplete phases (phases with ⬜ or 🔄, not ✅)
    - Collect ALL incomplete phases from that step
 
 7. **Single phase vs parallel decision**:
@@ -211,7 +211,7 @@ Execute a phase for the current item by delegating to agents.
 10. **Confirm**: Use AskUserQuestion to ask user to confirm the changes are good
 
 11. **Update all statuses BEFORE committing**: This MUST happen before the commit:
-    - Re-read the plan file to check if all phases are complete (all have ✅)
+    - Re-read the plan file to check if all phases are complete (all have ✅ emoji)
     - If all phases done, update item status to `DONE` in the backlog (ITEMS.md)
     - Ensure the plan file has all implementation notes and checkmarks
 

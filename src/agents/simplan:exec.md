@@ -126,8 +126,13 @@ When running in parallel with other phases (you'll see "IMPORTANT: Other phases 
 
 After executing, update the phase in the plan file:
 
+**Phase status emoji:**
+- ⬜ Not started
+- 🔄 In progress
+- ✅ Completed
+
 ```markdown
-### Phase 1: <title>
+### 🔄 Phase 1: <title>
 - [x] <task 1>
 - [x] <task 2>
 - **Files**: <list of files>

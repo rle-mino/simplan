@@ -147,10 +147,15 @@ After approval:
 
 ## Plan Update Format
 
+**Phase status emoji:**
+- ⬜ Not started
+- 🔄 In progress
+- ✅ Completed
+
 After approving a single phase:
 
 ```markdown
-### Phase 1: <title> (completed)
+### ✅ Phase 1: <title>
 - [x] <task 1>
 - [x] <task 2>
 - **Files**: <list of files>
@@ -163,14 +168,14 @@ After approving a single phase:
 After approving multiple phases (parallel execution):
 
 ```markdown
-### Phase 1: <title> (completed)
+### ✅ Phase 1: <title>
 - [x] <task 1>
 - **Files**: <list of files>
 - **Commit message**: `<message>`
 - **Implementation notes**: <what was actually done>
 - **Review**: Approved - <brief note>
 
-### Phase 2: <title> (completed)
+### ✅ Phase 2: <title>
 - [x] <task 1>
 - **Files**: <list of files>
 - **Commit message**: `<message>`

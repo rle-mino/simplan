@@ -1,8 +1,25 @@
 ---
 name: simplan:review
 description: Review agent that validates code changes against the plan, checks quality and alignment, and can invoke {{AGENT:exec}} to fix issues. Use after phase execution to validate before committing.
-tools: Read, Glob, Grep, Bash, Write, Edit, Task, AskUserQuestion
 model: {{MODEL:opus}}
+temperature: {{TEMPERATURE:low}}
+hidden: {{HIDDEN:true}}
+tools:
+  - Read
+  - Glob
+  - Grep
+  - Bash
+  - Write
+  - Edit
+  - Task
+  - Question
+permission:
+  bash:
+    "*": deny
+    "git diff*": allow
+    "git log*": allow
+    "git status*": allow
+    "git show*": allow
 color: green
 ---
 
@@ -82,7 +99,7 @@ Now read the plan file to update status.
 
 **If ALL phases APPROVED** (or single phase approved):
 - Update the plan with checkmarks and implementation notes for each phase
-- Mark each phase as complete with ✅
+- Mark each phase as complete with checkmark
 - Update the Current Status section
 
 **If ANY phase NEEDS_WORK**:
@@ -115,7 +132,7 @@ After approval:
 After approving a single phase:
 
 ```markdown
-### Phase 1: <title> ✅
+### Phase 1: <title> (completed)
 - [x] <task 1>
 - [x] <task 2>
 - **Files**: <list of files>
@@ -127,14 +144,14 @@ After approving a single phase:
 After approving multiple phases (parallel execution):
 
 ```markdown
-### Phase 1: <title> ✅
+### Phase 1: <title> (completed)
 - [x] <task 1>
 - **Files**: <list of files>
 - **Commit message**: `<message>`
 - **Implementation notes**: <what was actually done>
 - **Review**: Approved - <brief note>
 
-### Phase 2: <title> ✅
+### Phase 2: <title> (completed)
 - [x] <task 1>
 - **Files**: <list of files>
 - **Commit message**: `<message>`

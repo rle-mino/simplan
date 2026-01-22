@@ -48,9 +48,14 @@ The project uses a template system to support multiple platforms:
 1. **Source templates** (`src/`) use placeholders like:
    - `{{PLATFORM_CONFIG_DIR}}` → `.claude` or `.opencode`
    - `{{PLATFORM_NAME}}` → `Claude Code` or `OpenCode`
-   - `{{MODEL:opus}}` → `opus` (Claude) or `anthropic/claude-sonnet-4-20250514` (OpenCode)
+   - `{{MODEL:opus}}` → `opus` (Claude) or `anthropic/claude-opus-4-5-20250929` (OpenCode)
+   - `{{MODEL:sonnet}}` → `sonnet` (Claude) or `anthropic/claude-sonnet-4-5-20250929` (OpenCode)
+   - `{{MODEL:haiku}}` → `haiku` (Claude) or `anthropic/claude-haiku-4-5-20250929` (OpenCode)
    - `{{AGENT:exec}}` → `simplan:exec` (Claude) or `simplan-exec` (OpenCode)
    - `{{EXIT_COMMAND}}` → `/exit` (Claude) or `quit` (OpenCode)
+   - `{{TEMPERATURE:low}}` → removed (Claude) or `0.1` (OpenCode)
+   - `{{TEMPERATURE:balanced}}` → removed (Claude) or `0.3` (OpenCode)
+   - `{{HIDDEN:true}}` → removed (Claude) or `true` (OpenCode)
 
 2. **Build script** (`build.sh`) transforms templates into platform-specific files in `dist/`
 
@@ -63,14 +68,18 @@ The project uses a template system to support multiple platforms:
 | Config dir | `.claude/` | `.opencode/` |
 | Command names | `item:add` | `item-add` |
 | Agent names | `simplan:exec` | `simplan-exec` |
-| Model format | `opus`, `sonnet`, `haiku` | `anthropic/claude-sonnet-4-20250514` |
-| Frontmatter | `allowed-tools:` (list) | `tools:` (object) |
+| Model format | `opus`, `sonnet`, `haiku` | `anthropic/claude-opus-4-5-20250929` |
+| Tools (commands) | `allowed-tools:` (YAML list) | Removed (uses agent permissions) |
+| Tools (agents) | `tools: Read, Write, ...` | `tools:` object with `tool: true` |
 | Agent mode | Not explicit | `mode: subagent` |
+| Temperature | Not supported | `temperature: 0.1` |
+| Hidden agents | Not supported | `hidden: true` |
+| Permissions | Not supported | `permission:` block |
 
 ### Key Concepts
 
 - **Commands** (`src/commands/*.md`): Define skills invoked via `/item:*` (Claude) or `/item-*` (OpenCode). Each has YAML frontmatter specifying `description`, `argument-hint`, and `allowed-tools`.
-- **Agents** (`src/agents/*.md`): Specialized prompts for delegation via the Task tool. Frontmatter defines `name`, `description`, `tools`, `model`, and `color`.
+- **Agents** (`src/agents/*.md`): Specialized prompts for delegation via the Task tool. Frontmatter defines `name`, `description`, `tools`, `model`, `temperature`, `hidden`, `permission`, and `color`.
 - **ITEMS.md**: User's backlog file at `.simplan/ITEMS.md` tracking work items and statuses.
 - **Plans**: Markdown files at `.simplan/plans/<number>-<slug>.md` with phased execution details.
 
@@ -162,13 +171,39 @@ Instructions using {{AGENT:exec}} and {{MODEL:opus}} placeholders...
 ---
 name: simplan:exec
 description: What this agent does
-tools: Read, Write, Edit, ...
 model: {{MODEL:opus}}
+temperature: {{TEMPERATURE:balanced}}
+hidden: {{HIDDEN:true}}
+tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+permission:
+  bash:
+    "*": deny
+    "git diff*": allow
 color: yellow
 ---
 
 You are the **{{AGENT:exec}}** agent...
 ```
+
+**Placeholders:**
+- `{{MODEL:opus|sonnet|haiku}}` - Model tier
+- `{{TEMPERATURE:low|balanced|high}}` - Temperature (0.1, 0.3, 0.7)
+- `{{HIDDEN:true|false}}` - Hide from autocomplete (OpenCode only)
+- `{{AGENT:exec|review}}` - Agent name with platform-appropriate separator
+
+**OpenCode-specific features:**
+- `tools:` converted to object format (`tool: true`)
+- `permission:` block preserved as-is
+- `hidden:` controls `@` autocomplete visibility
+- `temperature:` controls response determinism
+
+**Claude-specific behavior:**
+- `tools:` converted to comma-separated format
+- `temperature:`, `hidden:`, `permission:` lines removed
 
 ## Important Notes
 
@@ -176,3 +211,4 @@ You are the **{{AGENT:exec}}** agent...
 - **The `dist/` directory is gitignored** — It's regenerated on install
 - **Colons in filenames** — Claude Code supports `item:add.md`, OpenCode requires `item-add.md`
 - **Test both platforms** when making changes to ensure compatibility
+- **Model versions** — OpenCode uses full model IDs (e.g., `anthropic/claude-opus-4-5-20250929`)

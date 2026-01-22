@@ -52,6 +52,12 @@ Execute a phase for the current item by delegating to agents.
 
 5. **Read the plan**: Load the plan file (or folder's main file if it's a folder)
 
+5a. **Extract completion conditions** (if present):
+    - Look for the "Completion Conditions" section in the plan
+    - If it contains a table with validation commands and expected outcomes, extract them
+    - These will be passed to the executor agent to run after implementation
+    - If "None specified", skip completion condition checking
+
 6. **Determine next step**:
    - Parse the "Execution Steps" table from the plan (if present)
    - If no step table exists, treat each phase as its own step (backward compatibility)
@@ -88,11 +94,18 @@ Execute a phase for the current item by delegating to agents.
      - **Title**: <item title from backlog>
      - **Description**: <item description from backlog>
 
+     ## Completion Conditions
+     <If completion conditions exist in the plan, INLINE THE TABLE HERE:>
+     | Condition | Validation Command | Expected Outcome |
+     | ... | ... | ... |
+     <If none specified, write: "None specified - skip validation step">
+
      Follow your execution process:
      1. Understand the phase requirements (already provided above)
      2. Implement the changes as specified
-     3. Update the plan with implementation notes
-     4. Mark tasks as complete",
+     3. Run completion condition validations (if specified) and iterate until they pass
+     4. Update the plan with implementation notes
+     5. Mark tasks as complete",
      subagent_type="{{AGENT:exec}}",
      description="Execute Phase <N> of item #<X>"
    )
@@ -119,13 +132,20 @@ Execute a phase for the current item by delegating to agents.
       - **Title**: <item title from backlog>
       - **Description**: <item description from backlog>
 
+      ## Completion Conditions
+      <If completion conditions exist in the plan, INLINE THE TABLE HERE:>
+      | Condition | Validation Command | Expected Outcome |
+      | ... | ... | ... |
+      <If none specified, write: "None specified - skip validation step">
+
       IMPORTANT: Other phases are running in parallel. Only modify files listed in YOUR phase.
 
       Follow your execution process:
       1. Understand the phase requirements (already provided above)
       2. Implement the changes as specified
-      3. Update the plan with implementation notes
-      4. Mark tasks as complete",
+      3. Run completion condition validations (if specified) and iterate until they pass
+      4. Update the plan with implementation notes
+      5. Mark tasks as complete",
       subagent_type="{{AGENT:exec}}",
       description="Execute Phase <N> of item #<X>"
     )
@@ -144,8 +164,15 @@ Execute a phase for the current item by delegating to agents.
 
      Plan file: <plan-path> (only for updating status after review)
 
+     ## Completion Conditions
+     <If completion conditions exist in the plan, INLINE THE TABLE HERE:>
+     | Condition | Validation Command | Expected Outcome |
+     | ... | ... | ... |
+     <If none specified, write: "None specified">
+
      Review the code changes with fresh eyes. Use `git diff` to see what changed.
-     Validate quality and correctness based on the problem statement alone.",
+     Validate quality and correctness based on the problem statement alone.
+     If completion conditions are specified, verify they all pass before approving.",
      subagent_type="{{AGENT:review}}",
      description="Review Phase <N> of item #<X>"
    )
@@ -165,8 +192,15 @@ Execute a phase for the current item by delegating to agents.
 
       Plan file: <plan-path> (only for updating status after review)
 
+      ## Completion Conditions
+      <If completion conditions exist in the plan, INLINE THE TABLE HERE:>
+      | Condition | Validation Command | Expected Outcome |
+      | ... | ... | ... |
+      <If none specified, write: "None specified">
+
       Review the combined code changes with fresh eyes. Use `git diff` to see what changed.
       Validate quality and correctness for EACH problem statement.
+      If completion conditions are specified, verify they all pass before approving.
       Mark ALL phases if approved, or identify which specific phases need work.",
       subagent_type="{{AGENT:review}}",
       description="Review Phases <X>, <Y>, <Z> of item #<N>"

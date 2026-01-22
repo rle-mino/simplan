@@ -39,11 +39,35 @@ For each task in the phase:
 3. Keep changes minimal and focused
 4. Don't add extra features or refactoring beyond the task
 
-### Step 3: Update the Plan
+### Step 3: Run Completion Condition Validations
 
-After completing the tasks, update the plan file:
+If the prompt includes a **Completion Conditions** table (not "None specified"):
+
+1. **Run each validation command** from the table using Bash
+2. **Check the output** against the expected outcome
+3. **If any validation fails**:
+   - Analyze the error output
+   - Fix the issue in your code
+   - Re-run the validation
+   - Repeat until it passes (max 3 iterations per condition)
+4. **Document results** in implementation notes
+
+**Example iteration:**
+```
+Running: npm test
+Result: FAILED - 2 tests failing
+Fixing: Found issue in auth.ts line 45...
+Running: npm test
+Result: PASSED - all tests green
+```
+
+If a validation cannot be fixed after 3 attempts, note it as a blocker for the reviewer.
+
+### Step 4: Update the Plan
+
+After completing the tasks and validations, update the plan file:
 - Mark completed tasks with `[x]`
-- Add implementation notes
+- Add implementation notes (including validation results)
 - Note any deviations from the plan (and why)
 
 ## Deviation Rules
@@ -108,6 +132,7 @@ After executing, update the phase in the plan file:
 - [x] <task 2>
 - **Files**: <list of files>
 - **Implementation notes**: <what was actually done>
+- **Validation results**: <results of completion condition checks, if any>
 ```
 
 Also update the Current Status section:

@@ -92,6 +92,20 @@ Check the code for:
 - **Simplicity**: Is it as simple as possible?
 - **Safety**: Any security or stability concerns?
 
+### Step 4a: Verify Completion Conditions
+
+If the prompt includes a **Completion Conditions** table (not "None specified"):
+
+1. **Run each validation command** from the table using Bash
+2. **Verify the output** matches the expected outcome
+3. **If any validation fails**:
+   - This is a blocker - the phase cannot be approved
+   - Document which condition(s) failed and the actual output
+   - Invoke {{AGENT:exec}} to fix the issues
+   - Re-verify after fixes
+
+**All completion conditions must pass before approval.**
+
 ### Step 5: Validate and Update
 
 Now read the plan file to update status.
@@ -126,6 +140,11 @@ After approval:
 - [ ] Changes are minimal and focused
 - [ ] No unnecessary complexity
 
+### Completion Conditions (if specified)
+- [ ] All validation commands executed
+- [ ] All expected outcomes achieved
+- [ ] No failing tests, type errors, or lint issues (per conditions)
+
 ## Plan Update Format
 
 After approving a single phase:
@@ -137,6 +156,7 @@ After approving a single phase:
 - **Files**: <list of files>
 - **Commit message**: `<message>`
 - **Implementation notes**: <what was actually done>
+- **Validation results**: All conditions passed (or N/A if none specified)
 - **Review**: Approved - <brief note>
 ```
 

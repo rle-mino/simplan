@@ -71,7 +71,38 @@ Use WebFetch/WebSearch/Context7 if you need external documentation (libraries, A
 
 Adapt questions based on previous answers. Don't re-ask what's already clear.
 
-#### 2c. Decide: Loop or Proceed?
+#### 2c. Ask About Completion Conditions (Once per session)
+
+During one of your question rounds, ask the user about **completion conditions**:
+
+> "Would you like to define **completion conditions** for this item? These are verifiable criteria the model will check to ensure the work is done correctly.
+>
+> **Two parts to define:**
+>
+> 1. **Validation commands** - Shell commands the model runs to test its own work:
+>    - `npm test` or `pytest` (run test suite)
+>    - `npm run typecheck` or `tsc --noEmit` (type checking)
+>    - `npm run lint` or `eslint .` (linting)
+>    - `npm run build` (build succeeds)
+>    - `curl localhost:3000/api/health` (API responds)
+>
+> 2. **Expected outcomes** - What success looks like:
+>    - "All tests pass (exit code 0)"
+>    - "No TypeScript errors"
+>    - "Build completes without warnings"
+>    - "API returns 200 with `{status: 'ok'}`"
+>
+> Setting completion conditions allows the model to **iterate automatically** until all criteria pass, which **increases output quality**. This is optional but recommended."
+
+If the user provides completion conditions:
+- Record them in the plan under a dedicated "Completion Conditions" section
+- Include both the **validation command** and **expected outcome** for each condition
+- The executor will run these commands after implementation and iterate if they fail
+- The reviewer will verify all conditions pass before approval
+
+If the user declines or has none, note "None specified" and proceed.
+
+#### 2d. Decide: Loop or Proceed?
 
 After each Q&A round, evaluate:
 - Do I understand the requirements well enough?
@@ -141,6 +172,15 @@ Write the plan to `.simplan/plans/<number>-<slug>.md` using this format:
 
 ## Clarifications
 <Questions you asked and answers received>
+
+## Completion Conditions
+<"None specified" if user declined, otherwise list each condition:>
+
+| Condition | Validation Command | Expected Outcome |
+|-----------|-------------------|------------------|
+| Tests pass | `npm test` | Exit code 0, all tests green |
+| Type check | `npm run typecheck` | No errors |
+| ... | ... | ... |
 
 ## Execution Steps
 

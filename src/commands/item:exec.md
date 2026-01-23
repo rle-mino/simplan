@@ -231,13 +231,15 @@ Execute a phase for the current item by delegating to agents.
 
 ---
 
-## Next Steps
+## After Completion
+
+Once the phase is committed, **stop**. Do not continue to the next phase.
 
 If there are remaining phases, tell the user:
 
-> Step complete!
+> Phase complete!
 >
-> To continue with the next step, run:
+> To continue with the next phase, run:
 > `/item:exec`
 >
-> Tip: Run `{{CLEAR_COMMAND}}` to reset context before the next step.
+> Tip: Run `{{CLEAR_COMMAND}}` to reset context before the next phase.

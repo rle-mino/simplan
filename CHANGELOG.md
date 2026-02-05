@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-02-05
+
+### Added
+
+- `commit_plan` config option (`.simplan/config`) for committing plan files alongside code changes
+  - When `commit_plan=true`, item:add/plan/brainstorm/exec/delete/review can commit `.simplan/` changes
+  - All commits require explicit user confirmation
+- Claude Code web detection (`$CLAUDE_CODE_REMOTE`) to auto-skip confirmation prompts that fail silently on web
+
+### Fixed
+
+- `item:exec` no longer chains to the next phase after completion - now stops and prompts user to run `/item:exec` again
+
 ## [1.5.0] - 2026-01-22
 
 ### Added

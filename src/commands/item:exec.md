@@ -20,6 +20,12 @@ Current backlog:
 Check `.simplan/config` for settings (key=value format). Relevant setting:
 - `commit_plan=true` - If set, commit `.simplan/` changes after code commits
 
+## Environment Detection
+
+Check if running on Claude Code web by running: `echo $CLAUDE_CODE_REMOTE`
+- If the output is `true`, you are on Claude Code web - **skip all AskUserQuestion calls** (they lock the process)
+- If empty or unset, you are on CLI and can use AskUserQuestion normally
+
 ## Status Emojis
 
 When displaying or updating item statuses, use these emojis:
@@ -225,9 +231,11 @@ Execute a phase for the current item by delegating to agents.
     - Re-read the plan file to check if all phases are now complete (all have ✅ emoji)
     - If all phases done, update item status to `DONE` in ITEMS.md
 
-12. **Confirm**: Use AskUserQuestion to ask user to confirm and commit the changes (labels max 30 chars, headers max 30 chars; put details in descriptions)
+12. **Confirm**:
+    - If `$CLAUDE_CODE_REMOTE` is `true`, skip confirmation and proceed directly to commit
+    - Otherwise, use AskUserQuestion to ask user to confirm and commit the changes (labels max 30 chars, headers max 30 chars; put details in descriptions)
 
-13. **Commit**: If user confirmed, create **one commit per phase** (even for parallel execution):
+13. **Commit**: If user confirmed (or on web), create **one commit per phase** (even for parallel execution):
     - For each phase in the step:
       - Stage the code files modified during that phase (listed in the phase's "Files" section)
       - If `.simplan/config` contains `commit_plan=true`, also stage:

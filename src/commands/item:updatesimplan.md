@@ -44,7 +44,33 @@ Fetch from GitHub:
 - CHANGELOG.md: https://raw.githubusercontent.com/rle-mino/simplan/main/CHANGELOG.md
 
 Compare versions. If already up-to-date, inform user and skip to Step 4.
-Otherwise, show changelog entries between current and latest version.
+
+Otherwise, display the changelog to the user:
+
+1. **Extract relevant entries**: Parse CHANGELOG.md and show all version entries between the current installed version and the latest version (inclusive of latest, exclusive of current)
+
+2. **Format the changelog clearly**:
+   ```
+   ## What's New in v<latest>
+
+   <For each version from latest down to current+1>
+
+   ### v<version> - <date>
+
+   <List all Added/Changed/Fixed items with brief explanations>
+   ```
+
+3. **Explain behavioral changes**: For each significant change, provide a brief explanation of what it means for the user. Examples:
+   - "**`commit_plan` config option**: You can now optionally commit your `.simplan/` files alongside code changes. When enabled, simplan will ask before committing plan updates."
+   - "**`item:exec` no longer auto-chains**: After completing a phase, you'll now be prompted to run `/item:exec` again instead of automatically continuing. This gives you more control over the workflow."
+
+4. **Highlight new configuration options**: If new config options were added, note them separately:
+   ```
+   ## New Configuration Options
+
+   The following new settings are available in `.simplan/config`:
+   - `commit_plan` - Commit plan files with code changes (see Step 5)
+   ```
 
 ### Step 3: Run Update
 
@@ -85,11 +111,39 @@ If no `.simplan/` folder exists in the current project:
 (none)
 ```
 
-### Step 5: Report Summary
+### Step 5: Configure New Options
+
+Check if `.simplan/config` exists. Parse it as key=value format (one per line).
+
+For each configuration option that was introduced in versions between the user's previous version and the latest version, ask the user if they want to configure it.
+
+**Available configuration options:**
+
+#### `commit_plan` (added in v1.6.0)
+
+Ask using AskUserQuestion:
+- **Header**: "Commit plans?"
+- **Question**: "Do you want simplan to commit `.simplan/` files alongside your code changes?"
+- **Options**:
+  1. **"Yes"** - Description: "Plan files will be committed with code. You'll be asked to confirm each commit. Requires removing `.simplan/` from `.gitignore`."
+  2. **"No (default)"** - Description: "Plan files stay local and gitignored. Plans are personal working notes, not shared documentation."
+
+If user selects "Yes":
+1. Create or update `.simplan/config` with `commit_plan=true`
+2. Check if `.gitignore` contains `.simplan/` - if so, inform the user:
+   > **Note**: You'll need to remove `.simplan/` from your `.gitignore` to enable plan commits.
+   > You can do this manually or I can do it for you.
+   Ask with AskUserQuestion (Header: "Update .gitignore?", Options: "Yes, remove .simplan/" / "No, I'll do it manually")
+
+If user selects "No" or skips:
+- Do not modify `.simplan/config` for this option (default behavior is to not commit plans)
+
+### Step 6: Report Summary
 
 Provide a summary:
 - Framework version: X.X.X → Y.Y.Y (or "already up-to-date")
 - .simplan/ initialized (if created)
+- Configuration changes (if any options were set)
 - Any deprecated files that were cleaned up (reported by installer)
 
 ---

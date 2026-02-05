@@ -106,13 +106,13 @@ Removes an item and its plan file, renumbering remaining items.
 
 ---
 
-#### `/item:update` - Update simplan framework
+#### `/item:updatesimplan` - Update simplan framework
 **Goal**: Get the latest simplan commands and agents.
 
-Downloads and installs the latest version of simplan. Detects whether you have a global or local installation and updates accordingly.
+Downloads and installs the latest version of simplan. Detects whether you have a global or local installation and updates accordingly. Shows the changelog with explanations of new features and offers to configure new options.
 
-**What it updates**: Commands (`/item:*`) and agents (simplexecutor, simpreviewer).
-**What it preserves**: Your project data (`.simplan/ITEMS.md`, `.simplan/plans/`).
+**What it updates**: Commands (`/item:*`) and agents (simplan:exec, simplan:review).
+**What it preserves**: Your project data (`.simplan/ITEMS.md`, `.simplan/plans/`, `.simplan/config`).
 
 **When to use**: Periodically, or when you want new features and bug fixes.
 
@@ -134,6 +134,7 @@ Downloads and installs the latest version of simplan. Detects whether you have a
 ```
 .simplan/
 ├── ITEMS.md                    # All backlog items with status
+├── config                      # Optional configuration (key=value format)
 └── plans/
     ├── 1-add-auth.md           # Simple plan (single file)
     └── 2-refactor-api/         # Extensive plan (folder)
@@ -141,6 +142,25 @@ Downloads and installs the latest version of simplan. Detects whether you have a
         ├── phase-1.md          # Phase 1 details
         └── phase-2.md          # Phase 2 details
 ```
+
+### Configuration
+
+Simplan can be configured via `.simplan/config` using `key=value` format (one per line).
+
+**Available options:**
+
+| Option | Values | Default | Description |
+|--------|--------|---------|-------------|
+| `commit_plan` | `true`/`false` | `false` | Commit `.simplan/` changes alongside code |
+
+**Example `.simplan/config`:**
+```
+commit_plan=true
+```
+
+**`commit_plan`**: When enabled, simplan commands will offer to commit plan file changes (ITEMS.md, plan files) alongside your code commits. Each commit requires explicit confirmation.
+
+**Note**: By default, `.simplan/` is gitignored. If you enable `commit_plan=true`, you'll need to remove `.simplan/` from your `.gitignore` for commits to work.
 
 ### Item Format
 

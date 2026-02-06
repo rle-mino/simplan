@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-02-06
+
+### Added
+
+- Enhanced `/item:updatesimplan` to show changelog and configure new options
+
+### Changed
+
+- Replaced item numbers with URL-friendly slugs and per-item folders
+  - Items now stored at `.simplan/items/<slug>/ITEM.md` instead of numbered entries in `ITEMS.md`
+  - Plans stored alongside items as `PLAN.md` in the item folder
+  - All commands updated to work with slug-based identification
+
 ## [1.6.0] - 2026-02-05
 
 ### Added

@@ -105,7 +105,7 @@ curl -fsSL https://raw.githubusercontent.com/rle-mino/simplan/main/install.sh | 
 Then initialize simplan in your project:
 
 ```bash
-mkdir -p .simplan/plans && touch .simplan/ITEMS.md
+mkdir -p .simplan/items
 ```
 
 ## Quick Start
@@ -120,19 +120,19 @@ mkdir -p .simplan/plans && touch .simplan/ITEMS.md
 
 2. **Plan the item:**
    ```
-   /item:plan 1
+   /item:plan add-user-auth
    ```
    Claude explores your codebase, asks clarifying questions, and creates a phased plan.
 
 3. **Execute phases:**
    ```
-   /item:exec
+   /item:exec add-user-auth
    ```
    Claude executes one phase at a time, reviews the changes, and commits.
 
 4. **Complete the item:**
    ```
-   /item:review 1
+   /item:review add-user-auth
    ```
    Reviews all phases are complete and marks the item as done.
 
@@ -145,17 +145,17 @@ mkdir -p .simplan/plans && touch .simplan/ITEMS.md
 
 2. **Plan the item:**
    ```
-   /item-plan 1
+   /item-plan add-user-auth
    ```
 
 3. **Execute phases:**
    ```
-   /item-exec
+   /item-exec add-user-auth
    ```
 
 4. **Complete the item:**
    ```
-   /item-review 1
+   /item-review add-user-auth
    ```
 
 ## Commands
@@ -163,12 +163,12 @@ mkdir -p .simplan/plans && touch .simplan/ITEMS.md
 | Claude Code | OpenCode | Description |
 |-------------|----------|-------------|
 | `/item:add` | `/item-add` | Add a new item to the backlog |
-| `/item:plan [number]` | `/item-plan [number]` | Plan an item with 1-12 questions |
-| `/item:brainstorm [number]` | `/item-brainstorm [number]` | Brainstorm extensively (10-40 questions) before planning |
-| `/item:exec [number]` | `/item-exec [number]` | Execute the next phase of an item |
-| `/item:review [number]` | `/item-review [number]` | Review and complete an item |
+| `/item:plan [slug]` | `/item-plan [slug]` | Plan an item with 1-12 questions |
+| `/item:brainstorm [slug]` | `/item-brainstorm [slug]` | Brainstorm extensively (10-40 questions) before planning |
+| `/item:exec [slug]` | `/item-exec [slug]` | Execute the next phase of an item |
+| `/item:review [slug]` | `/item-review [slug]` | Review and complete an item |
 | `/item:progress` | `/item-progress` | Show next 20 backlog items (not DONE) |
-| `/item:delete [number]` | `/item-delete [number]` | Remove an item from the backlog |
+| `/item:delete [slug]` | `/item-delete [slug]` | Remove an item from the backlog |
 | `/item:prune` | `/item-prune` | Remove all completed (DONE) items |
 | `/item:help` | `/item-help` | Show workflow documentation |
 | `/item:updatesimplan` | `/item-updatesimplan` | Update simplan to the latest version |
@@ -181,7 +181,7 @@ Adds a new work item to the backlog. The assistant will ask you for:
 - **Type** - Feature, Fix, Refactor, Docs, or Test
 - **Description** - Detailed explanation of what needs to be done
 
-The item is created with status `BACKLOG` and assigned the next available number.
+The item is created with status `BACKLOG` and a URL-friendly slug derived from the title.
 
 ### `/item:plan` / `/item-plan`
 
@@ -193,7 +193,7 @@ Creates a phased execution plan for an item through focused Q&A (1-12 questions 
 3. Creates atomic phases, each with tasks, files, and commit messages
 4. Updates item status to `PLANNED`
 
-If no number is provided, shows available items and asks which to plan.
+If no slug is provided, shows available items and asks which to plan.
 
 ### `/item:brainstorm` / `/item-brainstorm`
 
@@ -246,7 +246,7 @@ If review fails, shows what's incomplete.
 
 Shows the next 20 backlog items that are not `DONE`. Displays:
 
-- Item number and title
+- Item slug and title
 - Current status (with emoji)
 - Type (Feature/Fix/etc.)
 - Progress for planned items (e.g., "2/5 phases")
@@ -255,7 +255,7 @@ Shows the next 20 backlog items that are not `DONE`. Displays:
 
 Removes an item from the backlog. Also deletes the associated plan file if one exists.
 
-Asks for confirmation before deleting. If no number provided, shows available items.
+Asks for confirmation before deleting. If no slug provided, shows available items.
 
 ### `/item:prune` / `/item-prune`
 
@@ -264,9 +264,8 @@ Removes all completed (`DONE`) items from the backlog in one operation. Useful f
 **Process:**
 1. Lists all DONE items that will be removed
 2. Asks for confirmation
-3. Deletes associated plan files
-4. Removes items from backlog
-5. Renumbers remaining items to keep them sequential
+3. Deletes item folders (including plans)
+4. Removes items from the backlog
 
 ### `/item:help` / `/item-help`
 
@@ -306,33 +305,32 @@ Simplan uses a `.simplan` directory in your project root:
 
 ```
 .simplan/
-├── ITEMS.md                    # Backlog with all items and statuses
-└── plans/
-    ├── 1-add-auth.md           # Simple plan (single file)
-    └── 2-refactor-api/         # Extensive plan (folder)
-        ├── README.md           # Plan overview
+└── items/
+    ├── add-user-auth/
+    │   ├── ITEM.md             # Item metadata (title, type, status)
+    │   └── PLAN.md             # Execution plan with phases
+    └── fix-pagination/
+        ├── ITEM.md
+        ├── PLAN.md
         ├── brainstorm.md       # Full Q&A log (from /item:brainstorm)
-        ├── phase-1.md          # Phase 1 details
-        └── phase-2.md          # Phase 2 details
+        └── phase-1.md          # Phase details (for extensive plans)
 ```
 
 > **Note:** The `.simplan/` directory is for local planning only and should **not** be committed to version control. The installer automatically adds it to `.gitignore`.
 
-### ITEMS.md Format
+### ITEM.md Format
 
 ```markdown
-## Item #1: Add user authentication
+# Add user authentication
 - **Type**: Feature
 - **Status**: PLANNED
 - **Description**: Implement login/logout with session management
-- **Slug**: add-user-authentication
-- **Plan**: .simplan/plans/1-add-user-authentication.md
 ```
 
-### Plan File Format
+### PLAN.md Format
 
 ```markdown
-# Plan: Item #1 - Add user authentication
+# Plan: Add user authentication
 
 ## Context
 <What was learned about the codebase>

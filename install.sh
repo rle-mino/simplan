@@ -328,15 +328,22 @@ else
     echo "Simplan v${NEW_VERSION} is now available in this project."
 fi
 
-# Add .simplan/ to .gitignore (local install only - global install handles this at runtime)
-if [[ "$INSTALL_MODE" == "local" ]]; then
-    if [[ -f ".gitignore" ]]; then
-        if ! grep -q "^\.simplan/?$\|^\.simplan$" ".gitignore" 2>/dev/null; then
-            echo ".simplan/" >> ".gitignore"
-            echo -e "${GREEN}✓ Added .simplan/ to .gitignore${NC}"
-        fi
-    elif [[ -d ".git" ]]; then
-        # Git repo exists but no .gitignore - create one
+# Add .simplan/ to .gitignore (local install only, unless commit_plan is enabled)
+if [[ "$INSTALL_MODE" == "local" && -d ".git" ]]; then
+    # Check if user has opted to commit plan files
+    commit_plan=false
+    if [[ -f ".simplan/config" ]] && grep -q '^commit_plan=true' ".simplan/config" 2>/dev/null; then
+        commit_plan=true
+    fi
+
+    if [[ "$commit_plan" == true ]]; then
+        : # user wants .simplan/ tracked, don't add to gitignore
+    elif git check-ignore -q .simplan/ 2>/dev/null; then
+        : # already ignored by some git mechanism
+    elif [[ -f ".gitignore" ]]; then
+        echo ".simplan/" >> ".gitignore"
+        echo -e "${GREEN}✓ Added .simplan/ to .gitignore${NC}"
+    else
         echo ".simplan/" > ".gitignore"
         echo -e "${GREEN}✓ Created .gitignore with .simplan/${NC}"
     fi

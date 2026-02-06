@@ -43,7 +43,7 @@ Fetch from GitHub:
 - VERSION file: https://raw.githubusercontent.com/rle-mino/simplan/main/VERSION
 - CHANGELOG.md: https://raw.githubusercontent.com/rle-mino/simplan/main/CHANGELOG.md
 
-Compare versions. If already up-to-date, inform user and skip to Step 4.
+Compare versions. If already up-to-date, inform user and proceed to Step 4 (skip Step 3).
 
 Otherwise, display the changelog to the user:
 
@@ -69,7 +69,7 @@ Otherwise, display the changelog to the user:
    ## New Configuration Options
 
    The following new settings are available in `.simplan/config`:
-   - `commit_plan` - Commit plan files with code changes (see Step 5)
+   - `commit_plan` - Commit plan files with code changes (see Step 6)
    ```
 
 ### Step 3: Run Update
@@ -82,16 +82,11 @@ Execute the appropriate install command:
 
 Report the update result. The installer will automatically clean up deprecated files.
 
-### Step 4: Check for .simplan/ Initialization and Migration
+### Step 4: Migrate from Old Structure (ALWAYS run this step)
 
-#### 4a: New project (no .simplan/ exists)
+**This step MUST always run**, even if the version is already up-to-date. It checks whether the `.simplan/` data needs migration.
 
-If no `.simplan/` folder exists in the current project:
-- Ask user if they want to initialize it using AskUserQuestion
-- If confirmed, create:
-  - `.simplan/items/` directory
-
-#### 4b: Migrate from old structure (if needed)
+Check if `.simplan/ITEMS.md` exists. If it does NOT exist, skip to Step 5.
 
 If `.simplan/ITEMS.md` exists, this is an **old-format project** that needs migration to the new per-item folder structure.
 
@@ -119,12 +114,10 @@ If `.simplan/ITEMS.md` exists, this is an **old-format project** that needs migr
 
 4. **Migrate plans**: For each item that has a plan path (not "None"):
    - If the plan is a single file (e.g., `.simplan/plans/<number>-<slug>.md`):
-     - Copy it to `.simplan/items/<slug>/PLAN.md`
-     - In the copied file, replace the header `# Plan: Item #<number> - <title>` with `# Plan: <title>`
+     - Read it, replace the header `# Plan: Item #<number> - <title>` with `# Plan: <title>`, and write it to `.simplan/items/<slug>/PLAN.md`
    - If the plan is a folder (e.g., `.simplan/plans/<number>-<slug>/`):
-     - Copy `README.md` to `.simplan/items/<slug>/PLAN.md`
+     - Read `README.md`, update the header similarly, and write it to `.simplan/items/<slug>/PLAN.md`
      - Copy any other files (brainstorm.md, phase-N.md, etc.) to `.simplan/items/<slug>/`
-     - Update headers similarly
 
 5. **Clean up old structure**:
    - Ask user for confirmation before deleting old files (use AskUserQuestion)
@@ -135,7 +128,16 @@ If `.simplan/ITEMS.md` exists, this is an **old-format project** that needs migr
 
 6. **Report migration results**: List items migrated and any issues encountered.
 
-### Step 5: Configure New Options
+### Step 5: Initialize .simplan/ (if needed)
+
+If no `.simplan/` folder exists in the current project:
+- Ask user if they want to initialize it using AskUserQuestion
+- If confirmed, create:
+  - `.simplan/items/` directory
+
+If `.simplan/` exists but `.simplan/items/` does not, create it.
+
+### Step 6: Configure New Options
 
 Check if `.simplan/config` exists. Parse it as key=value format (one per line).
 
@@ -162,7 +164,7 @@ If user selects "Yes":
 If user selects "No" or skips:
 - Do not modify `.simplan/config` for this option (default behavior is to not commit plans)
 
-### Step 6: Report Summary
+### Step 7: Report Summary
 
 Provide a summary:
 - Framework version: X.X.X → Y.Y.Y (or "already up-to-date")
@@ -177,7 +179,9 @@ Provide a summary:
 
 Tell the user:
 
-> Simplan updated to <version>!
->
+> Simplan is up to date (<version>)!
+
+If framework files were updated (Step 3 ran), also tell the user:
+
 > To load the new commands, restart {{PLATFORM_NAME}}:
 > `{{EXIT_COMMAND}}` then reopen

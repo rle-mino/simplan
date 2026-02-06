@@ -37,7 +37,12 @@ simplan/
 │       └── agents/
 ├── build.sh                # Generates dist/ from src/
 ├── install.sh              # Installs for Claude Code or OpenCode
-├── examples/               # Example ITEMS.md format
+├── examples/               # Example item folder structure
+│   └── items/
+│       ├── add-user-auth/
+│       │   └── ITEM.md
+│       └── fix-pagination/
+│           └── ITEM.md
 └── VERSION                 # Current version number
 ```
 
@@ -78,8 +83,11 @@ The project uses a template system to support multiple platforms:
 
 - **Commands** (`src/commands/*.md`): Define skills invoked via `/item:*` (Claude) or `/item-*` (OpenCode). Each has YAML frontmatter specifying `description`, `argument-hint`, and `allowed-tools`.
 - **Agents** (`src/agents/*.md`): Specialized prompts for delegation via the Task tool. Frontmatter defines `name`, `description`, `tools`, `temperature`, `hidden`, `permission`, and `color`.
-- **ITEMS.md**: User's backlog file at `.simplan/ITEMS.md` tracking work items and statuses.
-- **Plans**: Markdown files at `.simplan/plans/<number>-<slug>.md` with phased execution details.
+- **Items**: Each item is a folder at `.simplan/items/<slug>/` containing:
+  - `ITEM.md` — metadata (title, type, status, description)
+  - `PLAN.md` — the plan (phases, steps, completion conditions)
+  - Additional files (e.g., `phase-1.md`) for extensive plans
+- **Slugs**: URL-friendly identifiers derived from item titles (e.g., `add-user-auth`). The slug is the folder name.
 
 ### Workflow States
 
@@ -120,12 +128,12 @@ There are no automated tests. To validate changes:
    ```bash
    # For Claude Code
    ./install.sh --claude
-   
+
    # For OpenCode
    ./install.sh --opencode
    ```
 3. Run through the full workflow: `/item:add` → `/item:plan` → `/item:exec` → `/item:review`
-4. Test edge cases (no items, invalid numbers, etc.)
+4. Test edge cases (no items, invalid slugs, etc.)
 
 ### Installation (for development)
 
@@ -139,7 +147,7 @@ There are no automated tests. To validate changes:
 
 Then initialize in a project:
 ```bash
-mkdir -p .simplan/plans && touch .simplan/ITEMS.md
+mkdir -p .simplan/items
 ```
 
 ## Source Template Format
@@ -157,7 +165,7 @@ allowed-tools:
 ---
 
 ## Context
-@.simplan/ITEMS.md
+Read the `.simplan/items/` directory to see existing items.
 
 ## Task
 Instructions using {{AGENT:exec}} placeholders...

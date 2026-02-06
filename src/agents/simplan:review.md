@@ -126,7 +126,7 @@ Now read the plan file to add your review notes.
 After approval:
 - Ensure your review notes are added to the plan file
 - Do NOT update phase status emojis or Current Status section
-- Do NOT update ITEMS.md backlog status
+- Do NOT update ITEM.md status
 - These status updates are handled by the orchestrating command
 
 ## Review Checklist
@@ -155,7 +155,7 @@ After approval:
 **You do NOT update:**
 - Phase status emojis (leave as-is, e.g., ⬜ or 🔄)
 - Current Status section
-- ITEMS.md backlog status
+- ITEM.md status
 
 After approving a single phase, add your review line:
 
@@ -196,7 +196,7 @@ If issues are found, use the Task tool to invoke {{AGENT:exec}}:
 
 **Single phase with issues:**
 ```
-Use the {{AGENT:exec}} agent to fix the following issues in Phase X of item Y:
+Use the {{AGENT:exec}} agent to fix the following issues in Phase X of <slug>:
 - Issue 1: <description>
 - Issue 2: <description>
 ```

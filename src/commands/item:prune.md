@@ -12,6 +12,11 @@ allowed-tools:
 
 Read the `.simplan/items/` directory to see existing items. Each subdirectory is an item slug containing an `ITEM.md` file.
 
+## Configuration
+
+Check `.simplan/config` for settings (key=value format). Relevant setting:
+- `commit_plan=true` - If set, commit `.simplan/` changes after modifications
+
 ## Task
 
 Purge all completed items from the backlog. Keep this lightweight - no agent delegation needed.
@@ -30,7 +35,13 @@ Purge all completed items from the backlog. Keep this lightweight - no agent del
 
 5. **Delete item folders**: For each DONE item, delete its entire `.simplan/items/<slug>/` directory
 
-6. **Show result**: Display summary of purged items and remaining items
+6. **Commit (if configured)**: If `.simplan/config` contains `commit_plan=true`:
+   - Ask user if they want to commit the changes (use AskUserQuestion with "Commit changes?" header, options "Yes" / "No")
+   - If yes:
+     - Stage the deletions of all purged `.simplan/items/<slug>/` directories
+     - Create commit with message: `plan: prune <count> done item(s)`
+
+7. **Show result**: Display summary of purged items and remaining items
 
 ---
 
